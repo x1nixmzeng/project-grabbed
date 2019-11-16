@@ -21,20 +21,20 @@ Over the years I have researched a few other Rare games (mostly for localisation
 
 The source is split into shared libraries (.lib) files that link with one of the tools. A rough structure is:
 
-`src/external` - gitmodule dependencies live here
-`src/base` - provides shared file streaming, endian helper, zlib utilities, etc
+* `src/external` - gitmodule dependencies live here
+* `src/base` - provides shared file streaming, endian helper, zlib utilities, etc
 
 The shared libraries for games are here too:
 
-`src/ghoulies` - main project for Grabbed by the Ghoulies
-`src/kameo` - main project for Kameo
+* `src/ghoulies` - main project for Grabbed by the Ghoulies
+* `src/kameo` - main project for Kameo
 
 (there are other games here)
 
 The main .exe apps are stored in `src/tools`
 
-`src/tools/hashlookup` - reverse hash lookup for Grabbed by the Ghoulies, Kameo, and Pinata
-`src/tools/demandinfo` - loose bundle extractor for Grabbed by the Ghoulies
+* `src/tools/hashlookup` - reverse hash lookup for Grabbed by the Ghoulies, Kameo, and Pinata
+* `src/tools/demandinfo` - loose bundle extractor for Grabbed by the Ghoulies
 
 (there are several misc apps here)
 
