@@ -1,0 +1,16 @@
+.vs
+build
+obj
+Makefile
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.bnl
+0*
+src/external/fmod
+src/external/bink
+enc_temp_folder
+/x32
+src/engine*
+

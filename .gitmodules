@@ -1,0 +1,6 @@
+[submodule "src/external/zlib"]
+	path = src/external/zlib
+	url = https://github.com/madler/zlib
+[submodule "src/external/DirectXTex"]
+    path = src/external/DirectXTex
+    url = https://github.com/microsoft/DirectXTex

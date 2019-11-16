@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <Type Name="grabbed::base::endianBig&lt;unsigned int&gt;">
+    <DisplayString>
+      {(((value &amp; 0xFF000000) &gt;&gt; 24) |
+        ((value &amp; 0x00FF0000) &gt;&gt;  8) |
+        ((value &amp; 0x0000FF00) &lt;&lt;  8) |
+        ((value &amp; 0x000000FF) &lt;&lt; 24))}
+    </DisplayString>
+  </Type>
+  <Type Name="grabbed::base::endianBig&lt;int&gt;">
+    <DisplayString>
+      {(((value &amp; 0xFF000000) &gt;&gt; 24) |
+        ((value &amp; 0x00FF0000) &gt;&gt;  8) |
+        ((value &amp; 0x0000FF00) &lt;&lt;  8) |
+        ((value &amp; 0x000000FF) &lt;&lt; 24))}
+    </DisplayString>
+  </Type>
+
+  <Type Name="grabbed::base::endianBig&lt;unsigned short&gt;">
+    <DisplayString>
+      {(((value &amp; 0xFF00) &gt;&gt;  8) |
+        ((value &amp; 0x00FF) &lt;&lt;  8))}
+    </DisplayString>
+  </Type>
+  <Type Name="grabbed::base::endianBig&lt;short&gt;">
+    <DisplayString>
+      {(((value &amp; 0xFF00) &gt;&gt;  8) |
+        ((value &amp; 0x00FF) &lt;&lt;  8))}
+    </DisplayString>
+  </Type>
+
+  <Type Name="grabbed::base::endianBig&lt;unsigned char&gt;">
+    <DisplayString>
+      {value}
+    </DisplayString>
+  </Type>
+  <Type Name="grabbed::base::endianBig&lt;char&gt;">
+    <DisplayString>
+      {value}
+    </DisplayString>
+  </Type>
+
+</AutoVisualizer>

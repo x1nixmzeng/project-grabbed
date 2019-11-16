@@ -1,0 +1,1 @@
+build\debug\hashlookup.exe ghoulies=hashes\ghoulies.txt kameo=hashes\kameo.txt pinata=hashes\pinata.txt %*
