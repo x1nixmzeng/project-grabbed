@@ -42,4 +42,5 @@ The main .exe apps are stored in `src/tools`
 
 * Szkaradek123's model importer (Python, for Blender) - https://forum.xentax.com/viewtopic.php?f=16&t=12463
 * RareWare Reddit - https://www.reddit.com/r/RareWare/
+* Grabbed by the Ghoulies (Rare Wiki) - https://rarewiki.com/wiki/Grabbed_by_the_Ghoulies
 
