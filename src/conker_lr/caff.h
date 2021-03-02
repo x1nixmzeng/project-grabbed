@@ -33,6 +33,10 @@ namespace grabbed
             bool read(base::stream& stream);
 
         protected:
+            bool readRetail(base::stream& stream);
+            bool readDemo(base::stream& stream);
+
+        protected:
             std::shared_ptr<CaffDB> m_data;
         };
     }
