@@ -1,26 +1,31 @@
 # Project Grabbed
 
-An old collection of reverse engineering efforts to explore and extract files from Grabbed by the Ghoulies.
+A collection of reverse engineering efforts to explore and extract files from Grabbed by the Ghoulies.
 
-The source files were originally written as part of a remake of the original game, and this repo is a subset of files from that app.
+The source files were originally written as part of a remake of the original Xbox game, and this repo is a subset of files from that app.
+
 
 ## Supported Files
 
-Over the years I have researched a few other Rare games (mostly for localisation text or texturess):
+Over the years I have researched other games developed by Rare, covering their titles on Xbox and Xbox360.
 
-* *Grabbed by the Ghoulies* `.bnl` bundle files
-* *Grabbed by the Ghoulies* all other files `loctext`, `font`, `xwavebank`, `demand` loose bundled files
-* *Kameo: Elements of Power* `.caf` textures
-* *Kameo: Elements of Power* `.str` string tables (localisation)
-* *Conker: Live & Reloaded* `default.rba` textures (with integrity check)
-* *Viva Piñata* `.bnl` (PC and Xbox360, with integrity check)
-* *Perfect Dark Zero* `.str` (Xbox360)
-* *Banjo-Kazooie: Nuts & Bolts* `loctext files` (Xbox360)
+| Game                             | Platform   | Version             |  Formats                                             |
+| -------------------------------- | ---------- | ------------------- | ---------------------------------------------------- |
+| Grabbed by the Ghoulies          | Xbox       | n/a                 | localisation, audio, fonts, textures, (rough) models |
+| Grabbed by the Ghoulies (demo)   | Xbox       | n/a                 | localisation, audio, fonts, textures, (rough) models |
+| Kameo: Elements of Power (alpha) | Xbox       | `CAFF24.09.03.0026` | textures                                             |
+| Conker: Live & Reloaded (demo)   | Xbox       | `CAFF24.09.03.0026` | textures                                             |
+| Conker: Live & Reloaded          | Xbox       | `CAFF28.01.05.0031` | textures                                             |
+| Perfect Dark Zero                | Xbox360    | `CAFF28.01.05.0031` | localisation                                         | 
+| Viva Piñata                      | PC/Xbox360 | `CAFF07.08.06.0036` | localisation                                         |
+| Banjo-Kazooie: Nuts & Bolts      | Xbox360    | `CAFF07.08.06.0036` | localisation                                         |
+
 
 ## Code Structure
 
 The source is split into shared libraries (.lib) files that link with one of the tools. A rough structure is:
 
+* `scripts` - directory for GENie project generation (https://github.com/bkaradzic/GENie)
 * `src/external` - gitmodule dependencies live here
 * `src/base` - provides shared file streaming, endian helper, zlib utilities, etc
 
@@ -29,14 +34,15 @@ The shared libraries for games are here too:
 * `src/ghoulies` - main project for Grabbed by the Ghoulies
 * `src/kameo` - main project for Kameo
 
-(there are other games here)
+(see the table above for the full list of supported games)
 
-The main .exe apps are stored in `src/tools`
+The main apps are stored in `src/tools`
 
 * `src/tools/hashlookup` - reverse hash lookup for Grabbed by the Ghoulies, Kameo, and Pinata
 * `src/tools/demandinfo` - loose bundle extractor for Grabbed by the Ghoulies
 
-(there are several misc apps here)
+(there are various here)
+
 
 ## See Also
 
