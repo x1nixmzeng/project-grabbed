@@ -7,6 +7,7 @@ project (LIB_NAME)
 
     links {
         "zlib",
+        "fmt",
     }
 
     files {
@@ -17,7 +18,8 @@ project (LIB_NAME)
 
     includedirs {
         path.join(SRC_DIR),
-        path.join(SRC_EXTERNAL_DIR)
+        path.join(SRC_EXTERNAL_DIR),
+        path.join(FMT_DIR, 'include'),
     }
 
     flags {
