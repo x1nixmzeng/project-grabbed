@@ -34,6 +34,9 @@ namespace grabbed
             // Skip a number of bytes from the current stream position
             virtual void skip(size_t count);
 
+            // Align the current offset with a power-of-2 alignment
+            virtual void align(size_t alignment);
+
             // Check a number of bytes can be read from the current stream position
             bool canRead(size_t length) const;
 

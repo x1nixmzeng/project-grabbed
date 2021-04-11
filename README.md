@@ -11,15 +11,19 @@ Over the years I have researched other games developed by Rare, covering their t
 
 | Game                             | Platform   | Version             |  Formats                                             |
 | -------------------------------- | ---------- | ------------------- | ---------------------------------------------------- |
-| Grabbed by the Ghoulies          | Xbox       | n/a                 | localisation, audio, fonts, textures, (rough) models |
 | Grabbed by the Ghoulies (demo)   | Xbox       | n/a                 | localisation, audio, fonts, textures, (rough) models |
+| Grabbed by the Ghoulies          | Xbox       | n/a                 | localisation, audio, fonts, textures, (rough) models |
 | Kameo: Elements of Power (alpha) | Xbox       | `CAFF24.09.03.0026` | textures                                             |
 | Conker: Live & Reloaded (demo)   | Xbox       | `CAFF24.09.03.0026` | textures                                             |
 | Conker: Live & Reloaded          | Xbox       | `CAFF28.01.05.0031` | textures                                             |
-| Perfect Dark Zero                | Xbox360    | `CAFF28.01.05.0031` | localisation                                         | 
+| Kameo: Elements of Power         | Xbox360    | `CAFF28.01.05.0031` | localisation                                         |
+| Perfect Dark Zero                | Xbox360    | `CAFF28.01.05.0031` | localisation                                         |
 | Viva Piñata                      | PC/Xbox360 | `CAFF07.08.06.0036` | localisation                                         |
 | Banjo-Kazooie: Nuts & Bolts      | Xbox360    | `CAFF07.08.06.0036` | localisation                                         |
+| 1 vs. 100                        | Xbox360    | `CAFF07.08.06.0036` | textures, (rough) anim/model/pose data               |
 
+
+Note that although *1 vs. 100* was not developed by Rare, it uses a very similar CAFF format
 
 ## Code Structure
 

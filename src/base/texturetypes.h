@@ -66,7 +66,7 @@ namespace grabbed
     };
 
     // Ported from RareView
-    enum class X360TextureFormat : size_t
+    enum class X360TextureFormat : u32
     {
         L8 = 2,
         A8L8 = 0x4a,

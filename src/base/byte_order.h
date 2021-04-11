@@ -3,6 +3,7 @@
 #include "base/types.h"
 
 #include <cstdint>
+#include <type_traits>
 
 namespace grabbed
 {
@@ -10,37 +11,45 @@ namespace grabbed
     {
         namespace
         {
-            inline i8 byte_swap(i8 value) {
+            //template<typename T> T byte_swap(T value);
+
+            i8 byte_swap(i8 value) {
                 return value;
             }
 
-            inline u8 byte_swap(u8 value) {
+            u8 byte_swap(u8 value) {
                 return value;
             }
 
-            inline i16 byte_swap(i16 value) {
+            i16 byte_swap(i16 value) {
                 return static_cast<i16>(_byteswap_ushort(static_cast<u16>(value)));
             }
 
-            inline u16 byte_swap(u16 value) {
+            u16 byte_swap(u16 value) {
                 return _byteswap_ushort(value);
             }
 
-            inline wchar_t byte_swap(wchar_t value) {
+            wchar_t byte_swap(wchar_t value) {
                 return static_cast<wchar_t>(_byteswap_ushort(static_cast<u16>(value)));
             }
 
-            inline i32 byte_swap(i32 value) {
+            i32 byte_swap(i32 value) {
                 return static_cast<i32>(_byteswap_ulong(static_cast<u32>(value)));
             }
 
-            inline u32 byte_swap(u32 value) {
+            u32 byte_swap(u32 value) {
                 return _byteswap_ulong(value);
             }
 
-            inline f32 byte_swap(f32 value) {
+            f32 byte_swap(f32 value) {
                 u32 temp = byte_swap(*reinterpret_cast<u32*>(&value));
                 return *reinterpret_cast<f32*>(&temp);
+            }
+
+            template<typename T, std::enable_if_t<(std::is_enum<T>::value), int> = 0>
+            T byte_swap(T value)
+            {
+                return static_cast<T>(byte_swap(static_cast<std::underlying_type_t<T>>(value)));
             }
         }
 
@@ -60,7 +69,7 @@ namespace grabbed
                 return byte_swap(value);
             }
 
-            T value;
+            T value{};
         };
         
         template <typename T>
@@ -79,7 +88,7 @@ namespace grabbed
                 return value;
             }
 
-            T value;
+            T value{};
         };
     }
 }
