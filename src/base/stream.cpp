@@ -56,6 +56,16 @@ namespace grabbed
             }
         }
 
+        void stream::align(size_t alignment)
+        {
+            auto p = getPosition();
+            auto rem = p & (alignment - 1);
+            if (rem != 0)
+            {
+                skip(alignment - rem);
+            }
+        }
+
         bool stream::canRead(size_t length) const
         {
             return calculatePosition(length) <= getSize();

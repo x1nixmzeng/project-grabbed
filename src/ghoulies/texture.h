@@ -31,7 +31,7 @@ namespace grabbed
          
         struct TextureData
         {
-            string context;
+            string context; // used for duplicate names across models
             string name;
             TEXTURE_HEADER info;
             buffer rawData;
@@ -49,7 +49,7 @@ namespace grabbed
 
             virtual bool read(base::stream& stream, Context& context) override;
 
-            virtual bool canAdd(string& name) const override;
+            virtual bool canAdd(const string& name) const override;
 
         private:
             std::shared_ptr<ghoulies::TextureDB> m_textures;

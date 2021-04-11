@@ -101,7 +101,7 @@ namespace grabbed
 
             virtual bool read(base::stream& stream, Context& context) override;
 
-            virtual bool canAdd(string& name) const override;
+            virtual bool canAdd(const string& name) const override;
 
             void setOnlyTextures(bool enabled) { m_onlyTextures = enabled; }
 

@@ -27,6 +27,9 @@ namespace grabbed
                 unknown_1 = 1, // faulty type?
                 unknown_2 = 2,
 
+                // 0xc==0xd
+                // 0xb == 0x17
+
                 unknown_4 = 4,
                 unknown_5 = 5,
                 unknown_6 = 6,
@@ -174,7 +177,7 @@ namespace grabbed
             return true;
         }
 
-        bool ModelReader::canAdd(string& name) const
+        bool ModelReader::canAdd(const string& name) const
         {
             return m_modelDb->models.find(name) == m_modelDb->models.end();
         }
@@ -427,13 +430,13 @@ namespace grabbed
                 // indice list:
                 auto list = params.stream.readArray<u16>(count);
 
-                auto bounds = std::minmax_element(list.begin(), list.end());
+                //auto bounds = std::minmax_element(list.begin(), list.end());
                 auto verts = params.instance.vertices.size();
 
                 // todo: investiate why vert count is invalid
                 assert_true_once(verts > 0);
                 if (verts > 0) {
-                    assert_true(*bounds.second < verts);
+                    //assert_true(*bounds.second < verts);
                 }
 
                 SubModel sub;

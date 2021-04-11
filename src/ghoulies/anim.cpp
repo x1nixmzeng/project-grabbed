@@ -19,10 +19,12 @@ namespace grabbed
                 u16 unknown_2a;
                 u16 unknown_2b;
                 u32 flags; // unknown - typically 269E0780h
-                u32 footerOffset; // Can be zero!
+                u32 footerOffset; // Can be zero! - THIS PART SUGGESTS THERE IS MORE?
                 u32 footerCount;
                 u8 padding[24];
             };
+
+            constexpr static auto hdrSize = sizeof(Header);
 
             struct Chunk
             {
@@ -102,7 +104,7 @@ namespace grabbed
             return true;
         }
 
-        bool AnimReader::canAdd(string& name) const
+        bool AnimReader::canAdd(const string& name) const
         {
             assert_true_once(m_data != nullptr);
             return m_data->data.find(name) == m_data->data.end();

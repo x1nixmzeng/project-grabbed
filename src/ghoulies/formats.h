@@ -121,7 +121,7 @@ namespace grabbed
             virtual ~BaseFormat() {}
 
             virtual bool read(base::stream& stream, Context& context) = 0;
-            virtual bool canAdd(string& name) const { return true; }
+            virtual bool canAdd(const string& name) const { return true; }
 
             bool readBundled(base::stream& stream, Context& content);
             bool readLoose(base::stream& stream, string& name);

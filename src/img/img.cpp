@@ -1,6 +1,7 @@
 #include "img.h"
 
 #include "DirectXTex.h"
+#include "DDS.h"
 
 #include "stb_image_write.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -53,7 +54,7 @@ namespace grabbed
             DirectX::ScratchImage scratch;
 
             // Note: this is a patched method which allow headerless images with just metadata
-            auto hr = DirectX::LoadFromDDSMemoryHeaderless(imageData.data(), imageData.size(), metadata, scratch);
+            auto hr = 0;// DirectX::LoadFromDDSMemoryHeaderless(imageData.data(), imageData.size(), metadata, scratch);
             if (SUCCEEDED(hr)) {
                 if (DirectX::IsCompressed(metadata.format)) {
                     auto img = scratch.GetImage(0, 0, 0);

@@ -15,6 +15,7 @@ namespace grabbed
         string LocDb::makeKey(const string& context, const string& name) const
         {
             string key;
+            key.reserve(context.size() + 2 + name.size());
             key.append(context);
             key.append("__");
             key.append(name);
@@ -253,7 +254,7 @@ namespace grabbed
             return true;
         }
 
-        bool LocReader::canAdd(string& name) const
+        bool LocReader::canAdd(const string& name) const
         {
             const auto& loadedData = m_database->getLanguageData().m_loadedFiles;
 

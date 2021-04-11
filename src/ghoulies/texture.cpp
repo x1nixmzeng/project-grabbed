@@ -30,7 +30,9 @@ namespace grabbed
             {
                 stream.seek(resourceBase + resource.offset);
 
-                TextureData data{ context.name, "", descriptorInfo, {} };
+                TextureData data;
+                data.name = context.name;
+                data.info = descriptorInfo;
 
                 data.rawData.resize(resource.size);
                 stream.readAll(data.rawData);
@@ -41,16 +43,12 @@ namespace grabbed
             return true;
         }
 
-        bool TextureReader::canAdd(string& name) const
+        bool TextureReader::canAdd(const string& name) const
         {
             const auto& data{ m_textures->m_storage };
-            auto it = std::find_if(data.begin(), data.end(), [=](const TextureData& item)
-            {
-                return item.name == name;
-            });
+            auto it = std::find_if(data.begin(), data.end(), [&](const TextureData& item) { return item.name == name; });
 
             if (it == data.end()) {
-                // the texture name was not found
                 return true;
             }
 

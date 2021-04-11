@@ -100,7 +100,7 @@ namespace grabbed
             FontReader(std::shared_ptr<FontDb> database);
 
             virtual bool read(base::stream& stream, ghoulies::Context& context) override;
-            virtual bool canAdd(string& name) const override;
+            virtual bool canAdd(const string& name) const override;
 
         private:
             std::shared_ptr<FontDb> m_fonts;

@@ -140,7 +140,7 @@ namespace grabbed
             return true;
         }
 
-        bool FontReader::canAdd(string& name) const
+        bool FontReader::canAdd(const string& name) const
         {
             const auto& data = m_fonts->editDb();
 

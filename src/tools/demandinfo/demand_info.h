@@ -7,11 +7,9 @@
 #include "base/types.h"
 
 #include <memory>
-#include <experimental/filesystem>
+#include <filesystem>
 
 #include "args.h"
-
-using namespace std::experimental;
 
 namespace grabbed
 {
@@ -24,7 +22,7 @@ namespace grabbed
 
         void parseAll(const string& path);
 
-        void parseFile(filesystem::path filePath);
+        void parseFile(std::filesystem::path filePath);
 
     private:
         std::shared_ptr<ghoulies::TextureDB> m_textureDb;

@@ -1,5 +1,6 @@
 #include "converters.h"
 
+#include <cmath>
 #include <array>
 
 namespace grabbed

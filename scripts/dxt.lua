@@ -41,13 +41,7 @@ project ("dxt")
 		DXT_DIR,
 	}
 
-        defines { "_UNICODE", "UNICODE", "_WIN32_WINNT=0x0A00" }
-
-	-- hack to avoid defaulting to 8.1
-	-- see https://github.com/bkaradzic/GENie/issues/360
-
-	local action = premake.action.current()
-	action.vstudio.windowsTargetPlatformVersion = "10.0.16299.0"
+	defines { "_UNICODE", "UNICODE", "_WIN32_WINNT=0x0A00" }
     
     defaultConfigurations()
 
