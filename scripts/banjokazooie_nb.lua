@@ -21,7 +21,7 @@ project (LIB_NAME)
     }
 
     flags {
-        "Cpp14",
+        "Cpp17",
     }
 
     defaultConfigurations()

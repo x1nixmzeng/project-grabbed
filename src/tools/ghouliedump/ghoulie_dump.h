@@ -10,14 +10,12 @@
 #include "base/textureutils.h"
 
 #include <memory>
-#include <experimental/filesystem>
+#include <filesystem>
 #include <functional>
 
 #include "args.h"
 
 #include "img/img.h"
-
-using namespace std::experimental;
 
 namespace grabbed
 {
@@ -29,7 +27,7 @@ namespace grabbed
         std::unique_ptr<base::filestream> openFile(const string& filename);
 
         void parseAll(const string& path);
-        void parseFile(filesystem::path filePath);
+        void parseFile(std::filesystem::path filePath);
 
         void iterateTextures(std::function<void(ghoulies::TextureData& data)> method);
 

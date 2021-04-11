@@ -2,7 +2,7 @@
 
 #include "base/assert.h"
 
-#include <experimental/filesystem>
+#include <filesystem>
 
 namespace grabbed
 {
@@ -12,7 +12,7 @@ namespace grabbed
         {
             string extractFileName(const string& pathname)
             {
-                std::experimental::filesystem::path path{ pathname };
+                std::filesystem::path path{ pathname };
                 return path.filename().generic_string();
             }
         }
@@ -32,7 +32,7 @@ namespace grabbed
             }
 #if _DEBUG
             else {
-                auto currentPath = std::experimental::filesystem::current_path().generic_string();
+                auto currentPath = std::filesystem::current_path().generic_string();
                 assert_always("Failed to open file. Check current path is valid: %s", currentPath.c_str());
             }
 #endif

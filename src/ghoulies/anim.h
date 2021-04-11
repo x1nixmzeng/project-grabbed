@@ -29,7 +29,7 @@ namespace grabbed
             AnimReader(std::shared_ptr<AnimDB> data);
 
             virtual bool read(base::stream& stream, Context& context) override;
-            virtual bool canAdd(string& name) const override;
+            virtual bool canAdd(const string& name) const override;
 
         private:
             std::shared_ptr<AnimDB> m_data;

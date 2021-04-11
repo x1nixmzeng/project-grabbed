@@ -161,7 +161,7 @@ namespace grabbed
             constexpr const u32 c_magic = 'LBSL';
 
 #pragma pack(push,1)
-            template <template<typename T> class var = endianLittle>
+            template <template<typename T> class var = base::endianLittle>
             struct Chunk2
             {
                 var<u32> index;

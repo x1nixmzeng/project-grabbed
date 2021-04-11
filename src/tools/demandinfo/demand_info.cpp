@@ -39,16 +39,16 @@ namespace grabbed
 
     void demandInfo::parseAll(const string& path)
     {
-        filesystem::path root{ path };
-        if (filesystem::exists(root)) {
-            filesystem::directory_iterator dir{ root };
+        std::filesystem::path root{ path };
+        if (std::filesystem::exists(root)) {
+            std::filesystem::directory_iterator dir{ root };
             for (auto& file : dir) {
                 parseFile(file.path());
             }
         }
     }
 
-    void demandInfo::parseFile(filesystem::path filePath)
+    void demandInfo::parseFile(std::filesystem::path filePath)
     {
         auto entry = openFile(filePath.generic_string());
         if (entry) {

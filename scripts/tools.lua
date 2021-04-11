@@ -29,6 +29,10 @@ function add_tool (link, name, dir)
             path.join(TOOL_DIR, dir),
         }
 
+        flags {
+            "Cpp17",
+        }
+
         defaultConfigurations()
 
 end

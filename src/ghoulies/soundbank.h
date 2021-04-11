@@ -30,7 +30,7 @@ namespace grabbed
             SoundbankReader(std::shared_ptr<SoundbankDb> data);
 
             virtual bool read(base::stream& stream, Context& context) override;
-            virtual bool canAdd(string& name) const override;
+            virtual bool canAdd(const string& name) const override;
 
         private:
             std::shared_ptr<SoundbankDb> m_data;

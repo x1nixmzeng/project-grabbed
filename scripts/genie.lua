@@ -4,6 +4,15 @@ newoption {
 }
 
 newoption {
+    trigger = "with-app",
+    description = "Enable building imgui app.",
+    allowed = {
+        { "gl",   "OpenGL" },
+        { "dx",   "DirectX 11" },
+    }
+}
+
+newoption {
     trigger = "audio-impl",
     value = "stub",
     description = "Backend audio implementation",
@@ -30,10 +39,6 @@ BUILD_DIR           = path.join(ROOT_DIR, "build")
 
 SRC_DIR             = path.join(ROOT_DIR, "src")
 SRC_EXTERNAL_DIR    = path.join(SRC_DIR, "external")
-
-BX_DIR              = path.join(SRC_EXTERNAL_DIR, "bx")
-BGFX_DIR            = path.join(SRC_EXTERNAL_DIR, "bgfx")
-BIMG_DIR            = path.join(SRC_EXTERNAL_DIR, "bimg")
 
 function defaultConfigurations()
 
@@ -93,16 +98,6 @@ solution "grabbed"
 
     language "C++"
     
-    if _OPTIONS["with-bgfx"] then
-        -- introduce bgfx toolchain early
-        dofile (path.join(BX_DIR, "scripts/toolchain.lua"))
-
-        if not toolchain(BUILD_DIR, BUILD_DIR) then
-        return -- no action specified
-        end    
-    end
-    
-    
     startproject "app"
 
     location(ROOT_DIR)
@@ -120,6 +115,7 @@ solution "grabbed"
         dofile "banjokazooie_nb.lua"
         dofile "pinata.lua"
         dofile "perfectdark.lua"
+        dofile "onevs.lua"
     
     if _OPTIONS["with-tools"] then
         group "tools"
@@ -128,3 +124,9 @@ solution "grabbed"
         -- workaround for broken genie/premake logic
         fixOutputPaths()
     end
+
+    if _OPTIONS["with-app"] then
+        group "app"
+            dofile "app.lua"
+    end
+

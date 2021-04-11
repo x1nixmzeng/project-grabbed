@@ -140,7 +140,7 @@ namespace grabbed
             return true;
         }
 
-        bool SoundbankReader::canAdd(string& name) const
+        bool SoundbankReader::canAdd(const string& name) const
         {
             assert_true(m_data != nullptr);
             return (m_data->items.find(name) == m_data->items.end());
