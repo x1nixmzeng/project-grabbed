@@ -21,7 +21,7 @@ namespace grabbed
                 
                 size_t width;
                 size_t height;
-                X360TextureFormat format;
+                GenericTextureType format;
             };
 
             struct Metadata

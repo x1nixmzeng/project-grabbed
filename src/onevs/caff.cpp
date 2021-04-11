@@ -9,6 +9,7 @@
 #include "base/datautils.h"
 #include "base/fileutils.h"
 #include "base/output.h"
+#include "base/textureutils.h"
 
 #include "img/img.h"
 
@@ -269,16 +270,16 @@ namespace grabbed
             template <template<typename> class var>
             struct TextureHeader
             {
-                var<u32> flags; // 438305106
+                u8 flags[3];
+                u8 format;
                 var<u32> zero1;
                 var<u32> zero2;
                 var<u16> width;
                 var<u16> height;
                 var<i32> unknown_3;
                 var<i32> unknown_4;
-                u8 flag_un1;
-                u8 flag_un2[3];
-                var<X360TextureFormat> format; // not sure this matches the 360 rareview enum - dxt1 == 0x3c
+                var<u32> unknown_5; // 8-bit flags
+                var<u32> unknown_6;
             };
 
             constexpr static auto TextureHeaderSize = sizeof(TextureHeader<base::endianLittle>);
@@ -563,21 +564,30 @@ namespace grabbed
 
                         def.width = textureHeader.width;
                         def.height = textureHeader.height;
-                        def.format = textureHeader.format; // not sure this will unpack properly
+
+                        // hot swap between common 360 format enum
+                        auto tfmt = static_cast<X360TextureFormat>(textureHeader.format);
+
+                        assert_true(tfmt == X360TextureFormat::DXT1 || tfmt == X360TextureFormat::DXT3 || tfmt == X360TextureFormat::DXT5);
+
+                        def.format = base::textureutils::makeGenericType(tfmt);
 
                         for (const auto& gpures : resourceList[gpuIndex])
                         {
                             if (gpures.index == res.index)
                             {
                                 const auto localGpuOffset{ so + offsets[gpuIndex] + gpures.offset };
+
                                 stream.seek(localGpuOffset);
 
+                                auto size = GetTextureDataSize(def.width, def.height, tfmt);
+
                                 buffer test;
-                                test.resize(GetTextureDataSize(def.width, def.height, X360TextureFormat::DXT1)); // temp dxt1
+                                test.resize(size);
                                 stream.readAll(test);
 
-                                img::convertToRGBA(def.data, test, def.width, def.height, X360TextureFormat::DXT1);
-
+                                img::convertToRGBA(def.data, test, def.width, def.height, tfmt);
+                               
                                 break;
                             }
                         }

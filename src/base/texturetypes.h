@@ -68,13 +68,13 @@ namespace grabbed
     // Ported from RareView
     enum class X360TextureFormat : u32
     {
-        L8 = 2,
+        L8 = 0x2,
         A8L8 = 0x4a,
+        X4R4G4B4 = 0x4f,
         DXT1 = 0x52,
         DXT3 = 0x53,
         DXT5 = 0x54,
-        // https://en.wikipedia.org/wiki/3Dc
-        DXN = 0x71,
+        DXN = 0x71, // https://en.wikipedia.org/wiki/3Dc
 
         // cDXN_XY,    // inverted relative to standard ATI2, 360's DXN
         // cDXN_YX     // standard ATI2 eeh
@@ -84,5 +84,17 @@ namespace grabbed
         CTX1 = 0x7c,
 
         A8R8G8B8 = 0x86,
+    };
+
+    enum class GenericTextureType
+    {
+        Unsupported,
+        DXT1,
+        BC1 = DXT1,
+        DXT3,
+        BC2 = DXT3,
+        DXT5,
+        BC3 = DXT5,
+        ARGB,
     };
 }

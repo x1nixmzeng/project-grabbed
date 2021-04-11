@@ -7,14 +7,17 @@ namespace grabbed
 {
     namespace img
     {
-        buffer ConvertToLinearTexture(const buffer& data, int _width, int _height, X360TextureFormat _textureFormat)
+        // x360 conversions from various sources, ported mostly from c#
+        // https://github.com/Xenomega/Alteration/blob/master/Alteration/Halo%203/Map%20File/Raw/BitmapRaw/DXTDecoder.cs
+
+        buffer ConvertToLinearTexture(const buffer& data, int width, int height, X360TextureFormat textureFormat)
         {
             buffer destData(data.size());
 
             int blockSize;
             int texelPitch;
 
-            switch (_textureFormat)
+            switch (textureFormat)
             {
             case X360TextureFormat::A8L8:
                 blockSize = 1;
@@ -43,11 +46,11 @@ namespace grabbed
                 texelPitch = 8;
                 break;
             default:
-                return std::move(destData);
+                return destData;
             }
 
-            int blockWidth = _width / blockSize;
-            int blockHeight = _height / blockSize;
+            int blockWidth = width / blockSize;
+            int blockHeight = height / blockSize;
 
             for (int j = 0; j < blockHeight; j++)
             {
@@ -60,8 +63,9 @@ namespace grabbed
 
                     int srcOffset = j * blockWidth * texelPitch + i * texelPitch;
                     int destOffset = y * blockWidth * texelPitch + x * texelPitch;
+
                     //TODO: ConvertToLinearTexture apparently breaks on on textures with a height of 64...
-                    if (destOffset >= destData.size()) continue;
+                    //if (destOffset >= destData.size()) continue;
 
                     memcpy(destData.data() + destOffset, data.data() + srcOffset, texelPitch);
                 }
@@ -189,118 +193,255 @@ namespace grabbed
                             code >>= 2;
                         }
                     }
-
-
                 }
             }
 
-            return std::move(pixData);
+            return pixData;
         }
 
-        //buffer DecodeDXT3(buffer& data, int width, int height)
-        //{
-        //    buffer pixData(width*height * 4);
+        buffer DecodeDXT3(buffer& data, int width, int height)
+        {
+            buffer pixData(width*height * 4);
 
-        //    int xBlocks = width / 4;
-        //    int yBlocks = height / 4;
-        //    for (int y = 0; y < yBlocks; y++)
-        //    {
-        //        for (int x = 0; x < xBlocks; x++)
-        //        {
-        //            int blockDataStart = ((y * xBlocks) + x) * 16;
-        //            std::vector<u16> alphaData(4);
+            int xBlocks = width / 4;
+            int yBlocks = height / 4;
+            for (int y = 0; y < yBlocks; y++)
+            {
+                for (int x = 0; x < xBlocks; x++)
+                {
+                    int blockDataStart = ((y * xBlocks) + x) * 16;
+                
+                    std::array<u16, 4> alphaData;
+                    alphaData[0] = (u16)((data[blockDataStart + 0] << 8) + data[blockDataStart + 1]);
+                    alphaData[1] = (u16)((data[blockDataStart + 2] << 8) + data[blockDataStart + 3]);
+                    alphaData[2] = (u16)((data[blockDataStart + 4] << 8) + data[blockDataStart + 5]);
+                    alphaData[3] = (u16)((data[blockDataStart + 6] << 8) + data[blockDataStart + 7]);
 
-        //            alphaData[0] = (u16)((data[blockDataStart + 0] << 8) + data[blockDataStart + 1]);
-        //            alphaData[1] = (u16)((data[blockDataStart + 2] << 8) + data[blockDataStart + 3]);
-        //            alphaData[2] = (u16)((data[blockDataStart + 4] << 8) + data[blockDataStart + 5]);
-        //            alphaData[3] = (u16)((data[blockDataStart + 6] << 8) + data[blockDataStart + 7]);
+                    std::array<u8, 16> alpha;
+                    for (int j = 0; j < 4; j++)
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {
+                            alpha[(i * 4) + j] = ((alphaData[j] & 0xF) * 16);
+                            alphaData[j] >>= 4;
+                        }
+                    }
 
-        //            //byte[, ] alpha = new byte[4, 4];
-        //            //for (int j = 0; j < 4; j++)
-        //            //{
-        //            //    for (int i = 0; i < 4; i++)
-        //            //    {
-        //            //        alpha[i, j] = (byte)((alphaData[j] & 0xF) * 16);
-        //            //        alphaData[j] >>= 4;
-        //            //    }
-        //            //}
+                    u16 color0 = (u16)((data[blockDataStart + 8] << 8) + data[blockDataStart + 9]);
+                    u16 color1 = (u16)((data[blockDataStart + 10] << 8) + data[blockDataStart + 11]);
 
-        //            u16 color0 = (u16)((data[blockDataStart + 8] << 8) + data[blockDataStart + 9]);
-        //            u16 color1 = (u16)((data[blockDataStart + 10] << 8) + data[blockDataStart + 11]);
+                    u32 code = *(u32*)(data.data() + (blockDataStart + 8 + 4));
 
-        //            u32 code = *(u32*)(data.data() + (blockDataStart + 8 + 4));
+                    u16 r0 = 0, g0 = 0, b0 = 0, r1 = 0, g1 = 0, b1 = 0;
+                    r0 = (u16)(8 * (color0 & 31));
+                    g0 = (u16)(4 * ((color0 >> 5) & 63));
+                    b0 = (u16)(8 * ((color0 >> 11) & 31));
 
-        //            u16 r0 = 0, g0 = 0, b0 = 0, r1 = 0, g1 = 0, b1 = 0;
-        //            r0 = (u16)(8 * (color0 & 31));
-        //            g0 = (u16)(4 * ((color0 >> 5) & 63));
-        //            b0 = (u16)(8 * ((color0 >> 11) & 31));
+                    r1 = (u16)(8 * (color1 & 31));
+                    g1 = (u16)(4 * ((color1 >> 5) & 63));
+                    b1 = (u16)(8 * ((color1 >> 11) & 31));
 
-        //            r1 = (u16)(8 * (color1 & 31));
-        //            g1 = (u16)(4 * ((color1 >> 5) & 63));
-        //            b1 = (u16)(8 * ((color1 >> 11) & 31));
+                    for (int k = 0; k < 4; k++)
+                    {
+                        auto j = k ^ 1;
 
-        //            for (int k = 0; k < 4; k++)
-        //            {
-        //                int j = k ^ 1;
+                        for (int i = 0; i < 4; i++)
+                        {
+                            int pixDataStart = (width * (y * 4 + j) * 4) + ((x * 4 + i) * 4);
+                            u32 codeDec = code & 0x3;
 
-        //                for (int i = 0; i < 4; i++)
-        //                {
-        //                    int pixDataStart = (width * (y * 4 + j) * 4) + ((x * 4 + i) * 4);
-        //                    uint codeDec = code & 0x3;
+                            pixData[pixDataStart + 3] = alpha[(i * 4) + j];
 
-        //                    pixData[pixDataStart + 3] = alpha[i, j];
+                            switch (codeDec)
+                            {
+                            case 0:
+                                pixData[pixDataStart + 0] = (u8)r0;
+                                pixData[pixDataStart + 1] = (u8)g0;
+                                pixData[pixDataStart + 2] = (u8)b0;
+                                break;
+                            case 1:
+                                pixData[pixDataStart + 0] = (u8)r1;
+                                pixData[pixDataStart + 1] = (u8)g1;
+                                pixData[pixDataStart + 2] = (u8)b1;
+                                break;
+                            case 2:
+                                if (color0 > color1)
+                                {
+                                    pixData[pixDataStart + 0] = (u8)((2 * r0 + r1) / 3);
+                                    pixData[pixDataStart + 1] = (u8)((2 * g0 + g1) / 3);
+                                    pixData[pixDataStart + 2] = (u8)((2 * b0 + b1) / 3);
+                                }
+                                else
+                                {
+                                    pixData[pixDataStart + 0] = (u8)((r0 + r1) / 2);
+                                    pixData[pixDataStart + 1] = (u8)((g0 + g1) / 2);
+                                    pixData[pixDataStart + 2] = (u8)((b0 + b1) / 2);
+                                }
+                                break;
+                            case 3:
+                                if (color0 > color1)
+                                {
+                                    pixData[pixDataStart + 0] = (u8)((r0 + 2 * r1) / 3);
+                                    pixData[pixDataStart + 1] = (u8)((g0 + 2 * g1) / 3);
+                                    pixData[pixDataStart + 2] = (u8)((b0 + 2 * b1) / 3);
+                                }
+                                else
+                                {
+                                    pixData[pixDataStart + 0] = 0;
+                                    pixData[pixDataStart + 1] = 0;
+                                    pixData[pixDataStart + 2] = 0;
+                                }
+                                break;
+                            }
 
-        //                    switch (codeDec)
-        //                    {
-        //                    case 0:
-        //                        pixData[pixDataStart + 0] = (byte)r0;
-        //                        pixData[pixDataStart + 1] = (byte)g0;
-        //                        pixData[pixDataStart + 2] = (byte)b0;
-        //                        break;
-        //                    case 1:
-        //                        pixData[pixDataStart + 0] = (byte)r1;
-        //                        pixData[pixDataStart + 1] = (byte)g1;
-        //                        pixData[pixDataStart + 2] = (byte)b1;
-        //                        break;
-        //                    case 2:
-        //                        if (color0 > color1)
-        //                        {
-        //                            pixData[pixDataStart + 0] = (byte)((2 * r0 + r1) / 3);
-        //                            pixData[pixDataStart + 1] = (byte)((2 * g0 + g1) / 3);
-        //                            pixData[pixDataStart + 2] = (byte)((2 * b0 + b1) / 3);
-        //                        }
-        //                        else
-        //                        {
-        //                            pixData[pixDataStart + 0] = (byte)((r0 + r1) / 2);
-        //                            pixData[pixDataStart + 1] = (byte)((g0 + g1) / 2);
-        //                            pixData[pixDataStart + 2] = (byte)((b0 + b1) / 2);
-        //                        }
-        //                        break;
-        //                    case 3:
-        //                        if (color0 > color1)
-        //                        {
-        //                            pixData[pixDataStart + 0] = (byte)((r0 + 2 * r1) / 3);
-        //                            pixData[pixDataStart + 1] = (byte)((g0 + 2 * g1) / 3);
-        //                            pixData[pixDataStart + 2] = (byte)((b0 + 2 * b1) / 3);
-        //                        }
-        //                        else
-        //                        {
-        //                            pixData[pixDataStart + 0] = 0;
-        //                            pixData[pixDataStart + 1] = 0;
-        //                            pixData[pixDataStart + 2] = 0;
-        //                        }
-        //                        break;
-        //                    }
+                            code >>= 2;
+                        }
+                    }
+                }
+            }
+            return pixData;
+        }
 
-        //                    code >>= 2;
-        //                }
-        //            }
+        buffer DecodeDXT5(buffer& data, int width, int height)
+        {
+            buffer pixData(width * height * 4);
 
+            int xBlocks = width / 4;
+            int yBlocks = height / 4;
 
-        //        }
-        //    }
-        //    return pixData;
-        //}
+            for (int y = 0; y < yBlocks; y++)
+            {
+                for (int x = 0; x < xBlocks; x++)
+                {
+                    int blockDataStart = ((y * xBlocks) + x) * 16;
+
+                    std::array<u32, 8> alphas;
+                    u32 alphaMask = 0;
+
+                    alphas[0] = data[blockDataStart + 1];
+                    alphas[1] = data[blockDataStart + 0];
+
+                    alphaMask |= data[blockDataStart + 6];
+                    alphaMask <<= 8;
+                    alphaMask |= data[blockDataStart + 7];
+                    alphaMask <<= 8;
+                    alphaMask |= data[blockDataStart + 4];
+                    alphaMask <<= 8;
+                    alphaMask |= data[blockDataStart + 5];
+                    alphaMask <<= 8;
+                    alphaMask |= data[blockDataStart + 2];
+                    alphaMask <<= 8;
+                    alphaMask |= data[blockDataStart + 3];
+
+                    // 8-alpha or 6-alpha block
+                    if (alphas[0] > alphas[1])
+                    {
+                        // 8-alpha block: derive the other 6
+                        // Bit code 000 = alpha_0, 001 = alpha_1, others are interpolated.
+                        alphas[2] = (u8)((6 * alphas[0] + 1 * alphas[1] + 3) / 7);    // bit code 010
+                        alphas[3] = (u8)((5 * alphas[0] + 2 * alphas[1] + 3) / 7);    // bit code 011
+                        alphas[4] = (u8)((4 * alphas[0] + 3 * alphas[1] + 3) / 7);    // bit code 100
+                        alphas[5] = (u8)((3 * alphas[0] + 4 * alphas[1] + 3) / 7);    // bit code 101
+                        alphas[6] = (u8)((2 * alphas[0] + 5 * alphas[1] + 3) / 7);    // bit code 110
+                        alphas[7] = (u8)((1 * alphas[0] + 6 * alphas[1] + 3) / 7);    // bit code 111
+                    }
+                    else
+                    {
+                        // 6-alpha block.
+                        // Bit code 000 = alpha_0, 001 = alpha_1, others are interpolated.
+                        alphas[2] = (u8)((4 * alphas[0] + 1 * alphas[1] + 2) / 5);    // Bit code 010
+                        alphas[3] = (u8)((3 * alphas[0] + 2 * alphas[1] + 2) / 5);    // Bit code 011
+                        alphas[4] = (u8)((2 * alphas[0] + 3 * alphas[1] + 2) / 5);    // Bit code 100
+                        alphas[5] = (u8)((1 * alphas[0] + 4 * alphas[1] + 2) / 5);    // Bit code 101
+                        alphas[6] = 0x00;                                               // Bit code 110
+                        alphas[7] = 0xFF;                                               // Bit code 111
+                    }
+
+                    std::array<u8, 16> alpha;
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            alpha[(i * 4) + j] = alphas[alphaMask & 7];
+                            alphaMask >>= 3;
+                        }
+                    }
+
+                    auto color0 = (u16)((data[blockDataStart + 8] << 8) + data[blockDataStart + 9]);
+                    auto color1 = (u16)((data[blockDataStart + 10] << 8) + data[blockDataStart + 11]);
+
+                    u32 code = *(u32*)(data.data() + (blockDataStart + 8 + 4));
+
+                    u16 r0 = 0, g0 = 0, b0 = 0, r1 = 0, g1 = 0, b1 = 0;
+                    r0 = (u16)(8 * (color0 & 31));
+                    g0 = (u16)(4 * ((color0 >> 5) & 63));
+                    b0 = (u16)(8 * ((color0 >> 11) & 31));
+
+                    r1 = (u16)(8 * (color1 & 31));
+                    g1 = (u16)(4 * ((color1 >> 5) & 63));
+                    b1 = (u16)(8 * ((color1 >> 11) & 31));
+
+                    for (int k = 0; k < 4; k++)
+                    {
+                        int j = k ^ 1;
+                        for (int i = 0; i < 4; i++)
+                        {
+                            int pixDataStart = (width * (y * 4 + j) * 4) + ((x * 4 + i) * 4);
+                            auto codeDec = code & 0x3;
+
+                            pixData[pixDataStart + 3] = alpha[i, j];
+
+                            switch (codeDec)
+                            {
+                            case 0:
+                                pixData[pixDataStart + 0] = (u8)r0;
+                                pixData[pixDataStart + 1] = (u8)g0;
+                                pixData[pixDataStart + 2] = (u8)b0;
+                                break;
+                            case 1:
+                                pixData[pixDataStart + 0] = (u8)r1;
+                                pixData[pixDataStart + 1] = (u8)g1;
+                                pixData[pixDataStart + 2] = (u8)b1;
+                                break;
+                            case 2:
+                                if (color0 > color1)
+                                {
+                                    pixData[pixDataStart + 0] = (u8)((2 * r0 + r1) / 3);
+                                    pixData[pixDataStart + 1] = (u8)((2 * g0 + g1) / 3);
+                                    pixData[pixDataStart + 2] = (u8)((2 * b0 + b1) / 3);
+                                }
+                                else
+                                {
+                                    pixData[pixDataStart + 0] = (u8)((r0 + r1) / 2);
+                                    pixData[pixDataStart + 1] = (u8)((g0 + g1) / 2);
+                                    pixData[pixDataStart + 2] = (u8)((b0 + b1) / 2);
+                                }
+                                break;
+                            case 3:
+                                if (color0 > color1)
+                                {
+                                    pixData[pixDataStart + 0] = (u8)((r0 + 2 * r1) / 3);
+                                    pixData[pixDataStart + 1] = (u8)((g0 + 2 * g1) / 3);
+                                    pixData[pixDataStart + 2] = (u8)((b0 + 2 * b1) / 3);
+                                }
+                                else
+                                {
+                                    pixData[pixDataStart + 0] = 0;
+                                    pixData[pixDataStart + 1] = 0;
+                                    pixData[pixDataStart + 2] = 0;
+                                }
+                                break;
+                            }
+
+                            code >>= 2;
+                        }
+                    }
+                }
+            }
+
+            return pixData;
+        }
 
         u32 ReadDXNBlockBits(buffer& data, int blockStart)
         {
@@ -415,151 +556,9 @@ namespace grabbed
                 }
             }
 
-            return std::move(pixData);
+            return pixData;
 
         }
-
-        //buffer DecodeDXT5(buffer& data, int width, int height)
-        //{
-        //    byte[] pixData = new byte[width * height * 4];
-        //    int xBlocks = width / 4;
-        //    int yBlocks = height / 4;
-        //    for (int y = 0; y < yBlocks; y++)
-        //    {
-        //        for (int x = 0; x < xBlocks; x++)
-        //        {
-        //            int blockDataStart = ((y * xBlocks) + x) * 16;
-        //            uint[] alphas = new uint[8];
-        //            ulong alphaMask = 0;
-
-        //            alphas[0] = data[blockDataStart + 1];
-        //            alphas[1] = data[blockDataStart + 0];
-
-        //            alphaMask |= data[blockDataStart + 6];
-        //            alphaMask <<= 8;
-        //            alphaMask |= data[blockDataStart + 7];
-        //            alphaMask <<= 8;
-        //            alphaMask |= data[blockDataStart + 4];
-        //            alphaMask <<= 8;
-        //            alphaMask |= data[blockDataStart + 5];
-        //            alphaMask <<= 8;
-        //            alphaMask |= data[blockDataStart + 2];
-        //            alphaMask <<= 8;
-        //            alphaMask |= data[blockDataStart + 3];
-
-
-        //            // 8-alpha or 6-alpha block
-        //            if (alphas[0] > alphas[1])
-        //            {
-        //                // 8-alpha block: derive the other 6
-        //                // Bit code 000 = alpha_0, 001 = alpha_1, others are interpolated.
-        //                alphas[2] = (byte)((6 * alphas[0] + 1 * alphas[1] + 3) / 7);    // bit code 010
-        //                alphas[3] = (byte)((5 * alphas[0] + 2 * alphas[1] + 3) / 7);    // bit code 011
-        //                alphas[4] = (byte)((4 * alphas[0] + 3 * alphas[1] + 3) / 7);    // bit code 100
-        //                alphas[5] = (byte)((3 * alphas[0] + 4 * alphas[1] + 3) / 7);    // bit code 101
-        //                alphas[6] = (byte)((2 * alphas[0] + 5 * alphas[1] + 3) / 7);    // bit code 110
-        //                alphas[7] = (byte)((1 * alphas[0] + 6 * alphas[1] + 3) / 7);    // bit code 111
-        //            }
-        //            else
-        //            {
-        //                // 6-alpha block.
-        //                // Bit code 000 = alpha_0, 001 = alpha_1, others are interpolated.
-        //                alphas[2] = (byte)((4 * alphas[0] + 1 * alphas[1] + 2) / 5);    // Bit code 010
-        //                alphas[3] = (byte)((3 * alphas[0] + 2 * alphas[1] + 2) / 5);    // Bit code 011
-        //                alphas[4] = (byte)((2 * alphas[0] + 3 * alphas[1] + 2) / 5);    // Bit code 100
-        //                alphas[5] = (byte)((1 * alphas[0] + 4 * alphas[1] + 2) / 5);    // Bit code 101
-        //                alphas[6] = 0x00;                                               // Bit code 110
-        //                alphas[7] = 0xFF;                                               // Bit code 111
-        //            }
-
-        //            byte[, ] alpha = new byte[4, 4];
-
-        //            for (int i = 0; i < 4; i++)
-        //            {
-        //                for (int j = 0; j < 4; j++)
-        //                {
-        //                    alpha[j, i] = (byte)alphas[alphaMask & 7];
-        //                    alphaMask >>= 3;
-        //                }
-        //            }
-
-        //            ushort color0 = (ushort)((data[blockDataStart + 8] << 8) + data[blockDataStart + 9]);
-        //            ushort color1 = (ushort)((data[blockDataStart + 10] << 8) + data[blockDataStart + 11]);
-
-        //            uint code = BitConverter.ToUInt32(data, blockDataStart + 8 + 4);
-
-        //            ushort r0 = 0, g0 = 0, b0 = 0, r1 = 0, g1 = 0, b1 = 0;
-        //            r0 = (ushort)(8 * (color0 & 31));
-        //            g0 = (ushort)(4 * ((color0 >> 5) & 63));
-        //            b0 = (ushort)(8 * ((color0 >> 11) & 31));
-
-        //            r1 = (ushort)(8 * (color1 & 31));
-        //            g1 = (ushort)(4 * ((color1 >> 5) & 63));
-        //            b1 = (ushort)(8 * ((color1 >> 11) & 31));
-
-        //            for (int k = 0; k < 4; k++)
-        //            {
-        //                int j = k ^ 1;
-
-        //                for (int i = 0; i < 4; i++)
-        //                {
-        //                    int pixDataStart = (width * (y * 4 + j) * 4) + ((x * 4 + i) * 4);
-        //                    uint codeDec = code & 0x3;
-
-        //                    pixData[pixDataStart + 3] = alpha[i, j];
-
-        //                    switch (codeDec)
-        //                    {
-        //                    case 0:
-        //                        pixData[pixDataStart + 0] = (byte)r0;
-        //                        pixData[pixDataStart + 1] = (byte)g0;
-        //                        pixData[pixDataStart + 2] = (byte)b0;
-        //                        break;
-        //                    case 1:
-        //                        pixData[pixDataStart + 0] = (byte)r1;
-        //                        pixData[pixDataStart + 1] = (byte)g1;
-        //                        pixData[pixDataStart + 2] = (byte)b1;
-        //                        break;
-        //                    case 2:
-        //                        if (color0 > color1)
-        //                        {
-        //                            pixData[pixDataStart + 0] = (byte)((2 * r0 + r1) / 3);
-        //                            pixData[pixDataStart + 1] = (byte)((2 * g0 + g1) / 3);
-        //                            pixData[pixDataStart + 2] = (byte)((2 * b0 + b1) / 3);
-        //                        }
-        //                        else
-        //                        {
-        //                            pixData[pixDataStart + 0] = (byte)((r0 + r1) / 2);
-        //                            pixData[pixDataStart + 1] = (byte)((g0 + g1) / 2);
-        //                            pixData[pixDataStart + 2] = (byte)((b0 + b1) / 2);
-        //                        }
-        //                        break;
-        //                    case 3:
-        //                        if (color0 > color1)
-        //                        {
-        //                            pixData[pixDataStart + 0] = (byte)((r0 + 2 * r1) / 3);
-        //                            pixData[pixDataStart + 1] = (byte)((g0 + 2 * g1) / 3);
-        //                            pixData[pixDataStart + 2] = (byte)((b0 + 2 * b1) / 3);
-        //                        }
-        //                        else
-        //                        {
-        //                            pixData[pixDataStart + 0] = 0;
-        //                            pixData[pixDataStart + 1] = 0;
-        //                            pixData[pixDataStart + 2] = 0;
-        //                        }
-        //                        break;
-        //                    }
-
-        //                    code >>= 2;
-        //                }
-        //            }
-
-
-        //        }
-        //    }
-        //    return pixData;
-        //}
-
 
         // https://github.com/xenia-project/xenia/blob/master/src/xenia/gpu/texture_conversion.cc
 
