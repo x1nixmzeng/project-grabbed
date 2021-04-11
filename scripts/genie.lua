@@ -105,6 +105,7 @@ solution "grabbed"
     group "external"
         dofile "zlib.lua"
         dofile "dxt.lua"
+        dofile "fmt.lua"
 
     group "libs"
         dofile "base.lua"

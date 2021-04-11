@@ -18,6 +18,7 @@ project (LIB_NAME)
     includedirs {
         path.join(SRC_DIR),
         path.join(SRC_DIR, "img", "img.h"),
+        path.join(FMT_DIR, 'include'),
     }
 
     flags {
