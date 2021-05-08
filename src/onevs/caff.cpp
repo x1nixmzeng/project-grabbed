@@ -539,14 +539,13 @@ namespace grabbed
                         }
                         ++index;
                     }
-                
-                    assert_true(index < sectionNames.size());
+               
+                    assert_true(index < sectionNames.size(), "Section {} does not exist", sectionName);
                     return index;
                 };
 
                 const size_t dataIndex{ findIndex(".data") };
-                const size_t gpuIndex{ findIndex(".gpu") };
-
+                
                 const auto so{ hdr.headerSize + hdr.chunk1.size + hdr.chunk2.size };
 
                 // Hacky workaround to extract textures from .data and .gpu sections
@@ -568,9 +567,11 @@ namespace grabbed
                         // hot swap between common 360 format enum
                         auto tfmt = static_cast<X360TextureFormat>(textureHeader.format);
 
-                        assert_true(tfmt == X360TextureFormat::DXT1 || tfmt == X360TextureFormat::DXT3 || tfmt == X360TextureFormat::DXT5);
+                        assert_true(tfmt == X360TextureFormat::DXT1 || tfmt == X360TextureFormat::DXT3 || tfmt == X360TextureFormat::DXT5 || tfmt == X360TextureFormat::A8R8G8B8);
 
                         def.format = base::textureutils::makeGenericType(tfmt);
+
+                        const size_t gpuIndex{ findIndex(".gpu") };
 
                         for (const auto& gpures : resourceList[gpuIndex])
                         {
