@@ -6,7 +6,7 @@
 
 namespace grabbed
 {
-    bool confirm_break(string& context)
+    bool confirm_break(std::string& context)
     {
 #if _WIN32
         auto result{ MessageBoxA(0, context.c_str(), "projectgrabbed", MB_ABORTRETRYIGNORE) };

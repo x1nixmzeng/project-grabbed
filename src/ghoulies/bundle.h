@@ -18,7 +18,7 @@ namespace grabbed
             BundleEntry() = default;
             explicit BundleEntry(const char* bundleName);
 
-            string name;
+            std::string name;
             u32 hash;
             ResourceType type;
             std::vector<ChunkHeader> resources;
@@ -32,7 +32,7 @@ namespace grabbed
             std::map<ResourceType, unsigned> m_types;
 
             bool containsFileHash(hash fileHash) const;
-            bool containsFilename(const string& filename) const;
+            bool containsFilename(const std::string& filename) const;
         };
 
         class BundleReader

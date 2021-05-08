@@ -116,7 +116,7 @@ namespace grabbed
                         
                 for (size_t i = 0; i < count; ++i)
                 {
-                    string keyName;
+                    std::string keyName;
                     keyName.append("key_");
                     keyName.append(std::to_string(i));
 

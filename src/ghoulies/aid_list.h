@@ -13,7 +13,7 @@ namespace grabbed
     {
         struct AidListData
         {
-            string res_name;
+            std::string res_name;
             hash res_hash = hashutils::s_invalidHash;
         };
 

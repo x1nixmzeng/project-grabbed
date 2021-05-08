@@ -8,21 +8,21 @@ namespace grabbed
 {
     namespace args
     {
-        using type = std::vector<string>;
+        using type = std::vector<std::string>;
 
         struct splittype
         {
-            std::map<string, string> mapped;
-            std::vector<string> loose;
+            std::map<std::string, std::string> mapped;
+            std::vector<std::string> loose;
 
-            bool read(const string& name, string& result) const;
-            bool existsLoose(const string& name) const;
+            bool read(const std::string& name, std::string& result) const;
+            bool existsLoose(const std::string& name) const;
         };
 
         splittype splitArgs(const type& args);
 
         type createArgs(int argc, char** argv);
-        type createArgs(string& argList);
+        type createArgs(std::string& argList);
         splittype createSplitArgs(int argc, char** argv);
     }
 }

@@ -70,18 +70,6 @@ namespace grabbed
 
                 u32 raw;
             };
-
-            string readAlignedCString(base::stream& stream)
-            {
-                auto result{ stream.readCString() };
-
-                size_t aligned{ (result.size() + 1) % 4 };
-                if (aligned != 0 ) {
-                    stream.skip(4 - aligned);
-                }
-
-                return result;
-            }
         }
 
         CaffReader::CaffReader(std::shared_ptr<CaffDB> data)
@@ -141,10 +129,12 @@ namespace grabbed
                 
                 auto items{ stream.readArray<EntryHeader>(actualCount) };
 
-                std::vector<string> stringList(actualCount);
+                std::vector<std::string> stringList(actualCount);
                 
                 for (size_t i = 0; i < actualCount; ++i) {
-                    stringList[i] = readAlignedCString(stream);
+                    stringList[i] = stream.readCString();
+                    stream.align(4);
+
                     output("%s\n", stringList[i].c_str());
                 }
             }

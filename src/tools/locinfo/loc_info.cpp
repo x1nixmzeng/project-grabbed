@@ -13,19 +13,19 @@ namespace grabbed
     {
     }
 
-    std::unique_ptr<base::filestream> locinfo::openFile(const string& filename)
+    std::unique_ptr<base::filestream> locinfo::openFile(const std::string& filename)
     {
         return std::make_unique<base::filestream>(filename);
     }
 
-    void locinfo::readLoc(const string& filename)
+    void locinfo::readLoc(const std::string& filename)
     {
         auto file = openFile(filename);
         if (file->isOpen())
         {
             ghoulies::LocReader reader(m_loc);
 
-            string name{ file->getFileName() };
+            auto name{ file->getFileName() };
             reader.readLoose(*file, name);
         }
     }

@@ -40,7 +40,7 @@ namespace grabbed
     }
 
     template<typename... Args>
-    string output_string(const char* format, Args... args)
+    std::string output_string(const char* format, Args... args)
     {
         std::array<char, 512> stringBuffer;
         sprintf_s(stringBuffer.data(), stringBuffer.max_size(), format, args...);

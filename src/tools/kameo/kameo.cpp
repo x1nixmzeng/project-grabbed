@@ -13,7 +13,7 @@ namespace grabbed
     {
         namespace
         {
-            std::unique_ptr<base::filestream> openFile(const string& filename)
+            std::unique_ptr<base::filestream> openFile(const std::string& filename)
             {
                 return std::make_unique<base::filestream>(filename);
             }
@@ -21,7 +21,7 @@ namespace grabbed
         
         int main(args::splittype& args)
         {
-            string path;
+            std::string path;
 
             if (args.read("caff", path)) {
                 auto caffData = std::make_shared<kameo::CaffDB>();

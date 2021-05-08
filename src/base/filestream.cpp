@@ -98,12 +98,12 @@ namespace grabbed
             readImpl(ms.getData(), getSize());
         }
 
-        const string& filestream::getPathName() const
+        const std::string& filestream::getPathName() const
         {
             return m_openPathName;
         }
 
-        const string& filestream::getFileName() const
+        const std::string& filestream::getFileName() const
         {
             return m_openFileName;
         }

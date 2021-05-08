@@ -104,7 +104,7 @@ namespace grabbed
             return true;
         }
 
-        bool AnimReader::canAdd(const string& name) const
+        bool AnimReader::canAdd(const std::string& name) const
         {
             assert_true_once(m_data != nullptr);
             return m_data->data.find(name) == m_data->data.end();

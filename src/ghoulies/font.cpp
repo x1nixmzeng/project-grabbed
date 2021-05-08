@@ -13,12 +13,11 @@ namespace grabbed
     {
         bool Font::hasGlyph(u16 codename) const
         {
-            auto result = std::find_if(m_glyphs.cbegin(), m_glyphs.cend(), [=](const GlyphData& glyph)
-            {
+            auto result = std::find_if(m_glyphs.begin(), m_glyphs.end(), [=](const GlyphData& glyph) {
                 return (glyph.m_charCode == codename);
             });
 
-            return (result != m_glyphs.cend());
+            return (result != m_glyphs.end());
         }
         
         FontReader::FontReader(std::shared_ptr<FontDb> database)
@@ -112,11 +111,11 @@ namespace grabbed
                 auto finalWidth = glyph.padXLeft + glyph.width + glyph.padXRight;
 
                 // Patch invalid glyph data (seen on 2 characters including the spacer ' ')
-                if (finalWidth != texHeader.width) {
-                    glyph.width = texHeader.width;
-                    glyph.padXLeft = 0;
-                    glyph.padXRight = 0;
-                }
+                //if (finalWidth != texHeader.width) {
+                //    glyph.width = texHeader.width;
+                //    glyph.padXLeft = 0;
+                //    glyph.padXRight = 0;
+                //}
 
                 // Cache off individual format
                 glyph.m_format = texHeader.format;
@@ -140,7 +139,7 @@ namespace grabbed
             return true;
         }
 
-        bool FontReader::canAdd(const string& name) const
+        bool FontReader::canAdd(const std::string& name) const
         {
             const auto& data = m_fonts->editDb();
 

@@ -2,28 +2,22 @@
 
 #include <fstream>
 
-namespace grabbed
-{
-    namespace base
+namespace grabbed::base::fileutils
+{    
+    void saveToDisk(stream& stream, size_t length, const std::string& filename)
     {
-        namespace fileutils
-        {
-            void saveToDisk(stream& stream, size_t length, string filename)
-            {
-                auto file = std::ofstream(filename, std::ofstream::binary);
-                if (file) {
-                    buffer swap(1024);
-                    while (length)
-                    {
-                        size_t count = (length > 1024) ? 1024 : length;
-                        stream.read(swap, count);
-                        file.write(reinterpret_cast<const char*>(swap.data()), count);
-                        length -= count;
-                    }
-                }
-
-                file.close();
+        auto file = std::ofstream(filename, std::ofstream::binary);
+        if (file) {
+            constexpr static const size_t sc_swapSize{ 1024 * 4 };
+            buffer swap(sc_swapSize);
+            while (length) {
+                size_t count = (length > sc_swapSize) ? sc_swapSize : length;
+                stream.read(swap, count);
+                file.write(reinterpret_cast<const char*>(swap.data()), count);
+                length -= count;
             }
         }
+
+        file.close();
     }
 }

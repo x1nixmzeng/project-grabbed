@@ -13,7 +13,7 @@ namespace grabbed
     {
         struct AnimEventSfx
         {
-            string name;
+            std::string name;
         };
 
         struct AnimEventFrame

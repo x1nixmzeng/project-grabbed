@@ -12,9 +12,9 @@ namespace grabbed
             : m_languageProvider(languageProvider)
         { }
 
-        string LocDb::makeKey(const string& context, const string& name) const
+        std::string LocDb::makeKey(const std::string& context, const std::string& name) const
         {
-            string key;
+            std::string key;
             key.reserve(context.size() + 2 + name.size());
             key.append(context);
             key.append("__");
@@ -22,7 +22,7 @@ namespace grabbed
             return key;
         }
 
-        const wchar_t* LocDb::translate(const string& key) const
+        const wchar_t* LocDb::translate(const std::string& key) const
         {
             auto& data = getLanguageData();
 
@@ -36,7 +36,7 @@ namespace grabbed
             return L"";
         }
 
-        const wchar_t* LocDb::translate(const string& context, const string& name) const
+        const wchar_t* LocDb::translate(const std::string& context, const std::string& name) const
         {
             return translate(makeKey(context, name));
         }
@@ -212,7 +212,7 @@ namespace grabbed
             LOCTEXT_CHUNK1 c1;
             c1.read(stream);
 
-            const string hint(stream.readString(4));
+            const std::string hint(stream.readString(4));
             assert_true(hint == "LSBL");
 
             // --- second important header
@@ -254,7 +254,7 @@ namespace grabbed
             return true;
         }
 
-        bool LocReader::canAdd(const string& name) const
+        bool LocReader::canAdd(const std::string& name) const
         {
             const auto& loadedData = m_database->getLanguageData().m_loadedFiles;
 

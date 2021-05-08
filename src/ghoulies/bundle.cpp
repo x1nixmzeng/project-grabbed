@@ -35,7 +35,7 @@ namespace grabbed
             return (result != m_files.end());
         }
 
-        bool BundleDb::containsFilename(const string& filename) const
+        bool BundleDb::containsFilename(const std::string& filename) const
         {
             u32 fname_hash{ hashutils::makeHash(filename) };
             
@@ -124,7 +124,7 @@ namespace grabbed
             if (ReadHeader(stream, ms)) {
 
                 if (m_dumpData) {
-                    string name;
+                    std::string name;
                     name.append("bundle_dump.bnlunc");
                     base::fileutils::saveToDisk(ms, ms.getSize(), name);
                     ms.seek(0);

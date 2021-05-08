@@ -14,7 +14,7 @@ namespace grabbed
     {
         namespace
         {
-            std::unique_ptr<base::filestream> openFile(const string& filename)
+            std::unique_ptr<base::filestream> openFile(const std::string& filename)
             {
                 return std::make_unique<base::filestream>(filename);
             }
@@ -27,7 +27,7 @@ namespace grabbed
 
             auto archiveData = std::make_shared<banjokazooie_nb::ArchiveDB>();
 
-            string path;
+            std::string path;
             if (args.read("banjokazooie_nb", path)) {
                 auto file = openFile(path);
                 if (file->isOpen()) {
@@ -50,7 +50,7 @@ namespace grabbed
             for (auto& fileData : archiveData->files) {
                 
                 if (args.existsLoose("dumparchives")) {
-                    string name = "archive_dump_" + std::to_string(i++);
+                    std::string name = "archive_dump_" + std::to_string(i++);
                     base::fileutils::saveToDisk(fileData.data, fileData.data.getSize(), name);
                 }
                 else {
@@ -60,7 +60,7 @@ namespace grabbed
                         fileData.data.seek(0);
 
                         // dump out example
-                        string name = "bad_file_" + std::to_string(i++);
+                        std::string name = "bad_file_" + std::to_string(i++);
                         base::fileutils::saveToDisk(fileData.data, fileData.data.getSize(), name);
                     }
                 }

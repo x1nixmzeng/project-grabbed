@@ -52,7 +52,7 @@ namespace grabbed
                 return false;
             }
 
-            string wholeFile;
+            std::string wholeFile;
             stream.readAll(wholeFile);
 
             size_t offset{ 0 };

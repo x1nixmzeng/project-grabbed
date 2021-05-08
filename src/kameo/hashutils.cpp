@@ -32,7 +32,7 @@ namespace grabbed
                 }
             }
 
-            u32 makeFileNameHash(const string& filename)
+            u32 makeFileNameHash(const std::string& filename)
             {
                 u32 hash = 0;
 
@@ -52,7 +52,7 @@ namespace grabbed
                 return hash;
             }
 
-            u32 getHashFromString(const string& hashString)
+            u32 getHashFromString(const std::string& hashString)
             {
                 u32 hash = s_invalidHash;
 
@@ -68,7 +68,7 @@ namespace grabbed
                 return hash;
             }
 
-            u32 makeHash(const string& val)
+            u32 makeHash(const std::string& val)
             {
                 assert_true(!val.empty());
                 const bool is_already_hash(val[0] == '0' && val.size() == 8);
@@ -80,16 +80,16 @@ namespace grabbed
                 return makeFileNameHash(val);
             }
 
-            string makeHashString(const string& val)
+            std::string makeHashString(const std::string& val)
             {
                 const u32 hash(makeHash(val));
 
                 return makeStringFromHash(hash);
             }
 
-            string makeStringFromHash(u32 hash)
+            std::string makeStringFromHash(u32 hash)
             {
-                string str;
+                std::string str;
                 str.resize(8);
 
                 const char hex[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };

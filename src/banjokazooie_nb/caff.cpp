@@ -67,7 +67,7 @@ namespace grabbed
                 return std::move(chunk);
             }
 
-            string readAlignedCString(base::stream& stream)
+            std::string readAlignedCString(base::stream& stream)
             {
                 auto result{ stream.readCString() };
 
@@ -179,7 +179,7 @@ namespace grabbed
 #pragma pack(pop)
 
             template <template<typename T> class var>
-            wstring readWCString(base::stream& stream)
+            std::wstring readWCString(base::stream& stream)
             {
                 wstring result;
                 result.reserve(16);
@@ -432,7 +432,7 @@ namespace grabbed
                 auto chunk1{ readChunk(stream, hdr.chunk1_zsize, hdr.chunk1_size) };
                 
                 auto sectionInfo{ chunk1.readArray<sectionInfoHeader<var>>(hdr.sectionCount) };
-                auto sectionNames{ chunk1.readArray<string>(hdr.sectionCount) };
+                auto sectionNames{ chunk1.readArray<std::string>(hdr.sectionCount) };
 
 
                 for (size_t i = 0; i < hdr.sectionCount; ++i) {
@@ -448,7 +448,7 @@ namespace grabbed
                 base::memorystream stringPool(poolSize);
                 chunk1.read(poolSize, stringPool);
 
-                std::vector<string> names;
+                std::vector<std::string> names;
 
                 // todo: process string pool names (c-strings)
                 for (size_t i = 0; i < hdr.count_1; ++i) {

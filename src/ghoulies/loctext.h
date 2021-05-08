@@ -17,8 +17,8 @@ namespace grabbed
         class LanguageData
         {
         public:
-            std::map<string, wstring> m_strings;
-            std::vector<string> m_loadedFiles;
+            std::map<std::string, std::wstring> m_strings;
+            std::vector<std::string> m_loadedFiles;
         };
 
         class LocDb
@@ -28,10 +28,10 @@ namespace grabbed
         public:
             LocDb(std::shared_ptr<LanguageProvider> languageProvider);
 
-            string makeKey(const string& context, const string& name) const;
+            std::string makeKey(const std::string& context, const std::string& name) const;
 
-            const wchar_t* translate(const string& key) const;
-            const wchar_t* translate(const string& context, const string& name) const;
+            const wchar_t* translate(const std::string& key) const;
+            const wchar_t* translate(const std::string& context, const std::string& name) const;
 
             const LanguageData& getLanguageData() const;
             LanguageData& editLanguageData();
@@ -84,7 +84,7 @@ namespace grabbed
             {
             public:
                 std::vector<LOCTEXT_CHUNK2_HEAD> info;
-                std::vector<wstring> wstrings;
+                std::vector<std::wstring> wstrings;
                 u32 a;
                 void read(base::stream& stream, const LOCTEXT_LSBL_HEADER& lsbl);
             };
@@ -100,7 +100,7 @@ namespace grabbed
             {
             public:
                 std::vector<LOCTEXT_CHUNK3_HEAD> info;
-                std::vector<string> strings;
+                std::vector<std::string> strings;
                 void read(base::stream& stream, const LOCTEXT_LSBL_HEADER& lsbl);
             };
 
@@ -125,7 +125,7 @@ namespace grabbed
             LocReader(std::shared_ptr<LocDb> database);
 
             virtual bool read(base::stream& stream, Context& context) override;
-            virtual bool canAdd(const string& name) const override;
+            virtual bool canAdd(const std::string& name) const override;
 
         private:
             std::shared_ptr<LocDb> m_database;

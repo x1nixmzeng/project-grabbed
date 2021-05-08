@@ -6,7 +6,7 @@
 namespace grabbed::base::datautils
 {
     // Ensure this whole string is printable
-    void sanityCheck(string& str);
+    void sanityCheck(std::string& str);
 
     // Ensure this whole c-string is printable (sized-sized array)
     template <size_t N>

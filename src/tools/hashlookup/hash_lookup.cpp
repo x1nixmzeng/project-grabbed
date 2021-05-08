@@ -45,7 +45,7 @@ namespace grabbed
         }
     }
 
-    void hashlookup::loadLooseGhoulies(const string& path)
+    void hashlookup::loadLooseGhoulies(const std::string& path)
     {
         base::filestream fs(path);
 
@@ -54,7 +54,7 @@ namespace grabbed
         }
     }
 
-    void hashlookup::loadLooseKameo(const string& path)
+    void hashlookup::loadLooseKameo(const std::string& path)
     {
         base::filestream fs(path);
 
@@ -63,7 +63,7 @@ namespace grabbed
         }
     }
 
-    void hashlookup::loadLoosePinata(const string& path)
+    void hashlookup::loadLoosePinata(const std::string& path)
     {
         base::filestream fs(path);
 
@@ -92,11 +92,11 @@ namespace grabbed
         output("\n");
     }
 
-    bool hashlookup::lookupString(const string& filename)
+    bool hashlookup::lookupString(const std::string& filename)
     {
         bool resolved{ false };
 
-        string cleaned;
+        std::string cleaned;
 
         auto lastSlash = filename.find_last_of('/');
         if (lastSlash != filename.npos) {
@@ -109,6 +109,9 @@ namespace grabbed
         if (cleaned.size() > 0)
         {
             auto ghouliesHash = ghoulies::hashutils::makeHash(cleaned);
+
+            printf("%08x\n", ghouliesHash);
+
             if (ghouliesHash != ghoulies::hashutils::s_invalidHash) {
                 if (lookupHash("ghoulies", ghouliesHash, cleaned, m_ghouliesHashes)) {
                     resolved = true;
@@ -127,14 +130,14 @@ namespace grabbed
             }
 
             if (!resolved) {
-                //output_fail("Failed to resolve %s\n", cleaned.c_str());
+                output_fail("Failed to resolve %s\n", cleaned.c_str());
             }
         }
 
         return resolved;
     }
 
-    bool hashlookup::lookupHash(const char* origin, u32 hash, const string& source, const hashutils::type& hashes)
+    bool hashlookup::lookupHash(const char* origin, u32 hash, const std::string& source, const hashutils::type& hashes)
     {
         auto result{ hashes.find(hash) };
 

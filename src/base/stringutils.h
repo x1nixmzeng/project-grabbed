@@ -4,12 +4,12 @@
 
 namespace grabbed::base::stringutils
 {
-    bool readLine(const string& source, size_t& offset, size_t& size);
+    bool readLine(const std::string& source, size_t& offset, size_t& size);
 
-    string stringFromWide(const wstring& source);
+    std::string stringFromWide(const std::wstring& source);
 
-    void toUpper(string& str);
-    void toUpper(wstring& str);
-    void toLower(string& str);
-    void toLower(wstring& str);
+    void toUpper(std::string& str);
+    void toUpper(std::wstring& str);
+    void toLower(std::string& str);
+    void toLower(std::wstring& str);
 }

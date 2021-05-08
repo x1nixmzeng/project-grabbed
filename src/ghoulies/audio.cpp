@@ -170,7 +170,7 @@ namespace grabbed
             stream.read(header);
             assert_true(header.name.raw == 'DNBW');
 
-            string internalName{ stream.readString(16) };
+            auto internalName{ stream.readString(16) };
 
             struct StructureSizes
             {

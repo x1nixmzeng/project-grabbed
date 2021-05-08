@@ -12,7 +12,7 @@ namespace grabbed
     {
         namespace
         {
-            std::unique_ptr<base::filestream> openFile(const string& filename)
+            std::unique_ptr<base::filestream> openFile(const std::string& filename)
             {
                 return std::make_unique<base::filestream>(filename);
             }
@@ -22,7 +22,7 @@ namespace grabbed
         {
             auto caffData = std::make_shared<conker_lr::CaffDB>();
 
-            string path;
+            std::string path;
             if (args.read("conkerlr", path)) {
                 auto file = openFile(path);
                 if (file->isOpen()) {

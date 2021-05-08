@@ -18,9 +18,9 @@ namespace grabbed
     public:
         demandInfo();
 
-        std::unique_ptr<base::filestream> openFile(const string& filename);
+        std::unique_ptr<base::filestream> openFile(const std::string& filename);
 
-        void parseAll(const string& path);
+        void parseAll(const std::string& path);
 
         void parseFile(std::filesystem::path filePath);
 
@@ -33,7 +33,7 @@ namespace grabbed
     {
         int main(args::splittype& args)
         {
-            string result;
+            std::string result;
             if (args.read("path", result)) {
                 demandInfo demandInfo;
                 demandInfo.parseAll(result);

@@ -22,7 +22,7 @@ namespace grabbed
         class CaffDB
         {
         public:
-            std::map<string, CaffEntry> data;
+            std::map<std::string, CaffEntry> data;
         };
 
         class CaffReader
@@ -31,7 +31,7 @@ namespace grabbed
             CaffReader(std::shared_ptr<CaffDB> data);
 
             bool read(base::stream& stream);
-            bool checkType(base::stream& stream, const string& desiredType);
+            bool checkType(base::stream& stream, const std::string& desiredType);
 
         protected:
             std::shared_ptr<CaffDB> m_data;

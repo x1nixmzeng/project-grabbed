@@ -27,6 +27,7 @@ function add_tool (link, name, dir)
         includedirs {
             path.join(SRC_DIR),
             path.join(TOOL_DIR, dir),
+            path.join(FMT_DIR, 'include'),
         }
 
         flags {

@@ -83,7 +83,7 @@ namespace grabbed
             return dds;
         }
 
-        bool convertDdsAndSavePng(const buffer& imageData, const string& filename, size_t width, size_t height, X360TextureFormat sourceFormat)
+        bool convertDdsAndSavePng(const buffer& imageData, const std::string& filename, size_t width, size_t height, X360TextureFormat sourceFormat)
         {
             DirectX::TexMetadata metadata;
 
@@ -120,7 +120,7 @@ namespace grabbed
             return result;
         }
 
-        bool convertRGBAndSavePng(const buffer& imageData, const string& filename, size_t width, size_t height, XboxD3DFormat sourceFormat)
+        bool convertRGBAndSavePng(const buffer& imageData, const std::string& filename, size_t width, size_t height, XboxD3DFormat sourceFormat)
         {
             // We only handle one raw RGB source for now
             if (sourceFormat != XboxD3DFormat::X_D3DFMT_LIN_A8R8G8B8) {
@@ -202,7 +202,7 @@ namespace grabbed
             return false;
         }
 
-        bool convertAndSavePng(const buffer& imageData, const string& filename, size_t width, size_t height, XboxD3DFormat sourceFormat)
+        bool convertAndSavePng(const buffer& imageData, const std::string& filename, size_t width, size_t height, XboxD3DFormat sourceFormat)
         {
             switch (sourceFormat)
             {
@@ -219,12 +219,12 @@ namespace grabbed
             return false;
         }
 
-        bool convertAndSavePng(const buffer& imageData, const string& filename, size_t width, size_t height, X360TextureFormat sourceFormat)
+        bool convertAndSavePng(const buffer& imageData, const std::string& filename, size_t width, size_t height, X360TextureFormat sourceFormat)
         {
             return false;
         }
 
-        bool savePngFromRGBA(const string& filename, size_t width, size_t height, const buffer& imageData)
+        bool savePngFromRGBA(const std::string& filename, size_t width, size_t height, const buffer& imageData)
         {
             return stbi_write_png(filename.c_str(), width, height, 4, imageData.data(), 0);
         }

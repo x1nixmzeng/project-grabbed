@@ -4,7 +4,7 @@
 
 namespace grabbed::base::stringutils
 {
-    bool readLine(const string& source, size_t& offset, size_t& size)
+    bool readLine(const std::string& source, size_t& offset, size_t& size)
     {
         offset += size;
 
@@ -42,31 +42,31 @@ namespace grabbed::base::stringutils
         return canDowncast(chr) ? static_cast<char>(chr & 0x7f) : '?';
     }
 
-    string stringFromWide(const wstring& source)
+    std::string stringFromWide(const std::wstring& source)
     {
-        string result;
+        std::string result;
         result.resize(source.size());
         std::transform(source.begin(), source.end(), result.begin(), downcast);
 
         return result;
     }
 
-    void toUpper(string& str)
+    void toUpper(std::string& str)
     {
         std::transform(str.begin(), str.end(), str.begin(), std::toupper);
     }
 
-    void toUpper(wstring& str)
+    void toUpper(std::wstring& str)
     {
         std::transform(str.begin(), str.end(), str.begin(), std::toupper);
     }
 
-    void toLower(string& str)
+    void toLower(std::string& str)
     {
         std::transform(str.begin(), str.end(), str.begin(), std::tolower);
     }
 
-    void toLower(wstring& str)
+    void toLower(std::wstring& str)
     {
         std::transform(str.begin(), str.end(), str.begin(), std::tolower);
     }

@@ -13,15 +13,15 @@ namespace grabbed
     class hashlookup
     {
     public:
-        void loadLooseGhoulies(const string& path);
-        void loadLooseKameo(const string& path);
-        void loadLoosePinata(const string& path);
+        void loadLooseGhoulies(const std::string& path);
+        void loadLooseKameo(const std::string& path);
+        void loadLoosePinata(const std::string& path);
 
         void outputStats();
-        bool lookupString(const string& filename);
+        bool lookupString(const std::string& filename);
 
     protected:
-        static bool lookupHash(const char* origin, u32 hash, const string& source, const hashutils::type& hashes);
+        static bool lookupHash(const char* origin, u32 hash, const std::string& source, const hashutils::type& hashes);
 
         hashutils::type m_ghouliesHashes;
         hashutils::type m_kameoHashes;
@@ -35,7 +35,7 @@ namespace grabbed
             hashlookup hashInfo;
             
             {
-                string path;
+                std::string path;
 
                 if (args.read("ghoulies", path)) {
                     hashInfo.loadLooseGhoulies(path);
@@ -53,13 +53,13 @@ namespace grabbed
             hashInfo.outputStats();
 
             {
-                string path;
+                std::string path;
                 if (args.read("hash_file", path)) {
 
                     base::filestream fs(path);
 
                     if (fs.isOpen()) {
-                        string wholeFile;
+                        std::string wholeFile;
                         fs.readAll(wholeFile);
 
                         size_t offset{ 0 };

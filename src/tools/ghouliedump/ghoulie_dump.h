@@ -24,9 +24,9 @@ namespace grabbed
     public:
         ghoulieDump();
 
-        std::unique_ptr<base::filestream> openFile(const string& filename);
+        std::unique_ptr<base::filestream> openFile(const std::string& filename);
 
-        void parseAll(const string& path);
+        void parseAll(const std::string& path);
         void parseFile(std::filesystem::path filePath);
 
         void iterateTextures(std::function<void(ghoulies::TextureData& data)> method);
@@ -49,7 +49,7 @@ namespace grabbed
             
             ghoulieDump ghoulieDump;
 
-            string result;
+            std::string result;
             if (args.read("path", result)) {
                 grabbed::output("Scanning path %s...\n", result.c_str());
                 ghoulieDump.parseAll(result);
@@ -69,7 +69,7 @@ namespace grabbed
                     data.info.tileCount,
                     base::textureutils::toString(data.info.format));
 
-                string filename;
+                std::string filename;
                 filename = data.context;
                 if (data.name.size() > 0) {
                     filename += "_";

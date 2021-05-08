@@ -32,12 +32,12 @@ namespace grabbed
 
             void readAll(memorystream& ms);
 
-            const string& getPathName() const;
-            const string& getFileName() const;
+            const std::string& getPathName() const;
+            const std::string& getFileName() const;
 
         private:
-            string m_openPathName;
-            string m_openFileName;
+            std::string m_openPathName;
+            std::string m_openFileName;
             size_t m_size{ 0 };
             size_t m_position{ 0 };
             std::ifstream m_file;

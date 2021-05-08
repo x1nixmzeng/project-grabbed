@@ -6,7 +6,7 @@ namespace grabbed
 {
     namespace ghoulies
     {
-        size_t CueListDb::GetSize(const string src) const
+        size_t CueListDb::GetSize(const std::string src) const
         {
             auto res = m_cuelist.find(src);
             if (res != m_cuelist.end()) {
@@ -28,7 +28,7 @@ namespace grabbed
             buffer buf(context.header.fileChunk.size);
             stream.readAll(buf);
             
-            string key, name;
+            std::string key, name;
 
             key.reserve(16); // truncated to 16-characters
             name.reserve(64);

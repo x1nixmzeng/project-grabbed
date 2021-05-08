@@ -19,7 +19,7 @@ namespace grabbed
     {
         namespace
         {
-            std::unique_ptr<base::filestream> openFile(const string& filename)
+            std::unique_ptr<base::filestream> openFile(const std::string& filename)
             {
                 return std::make_unique<base::filestream>(filename);
             }
@@ -27,7 +27,7 @@ namespace grabbed
         
         int main(args::splittype& args)
         {
-            string path;
+            std::string path;
 
             auto metadata{ std::make_shared<onevs::MetadataDB>() };
 
@@ -64,7 +64,7 @@ namespace grabbed
             {
                 printf("%s\n", resource.originalName.c_str());
 
-                std::vector<string> names;
+                std::vector<std::string> names;
 
                 for (const auto& str : resource.subfiles)
                 {
@@ -79,7 +79,7 @@ namespace grabbed
                 {
                     if (f.data.size() > 0)
                     {
-                        string filename;
+                        std::string filename;
                         if (texture < names.size()) {
                             filename = names[texture];
                         }

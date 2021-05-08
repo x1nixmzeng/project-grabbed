@@ -62,8 +62,8 @@ namespace grabbed
 
             struct CaffAreaSrc
             {
-                string Name;
-                string Version;
+                std::string Name;
+                std::string Version;
             };
 
             template <template<typename> class var>
@@ -474,7 +474,7 @@ namespace grabbed
                 stream.seek(hdr.headerSize);
 
                 const auto sectionInfo{ stream.readArray<sectionInfoHeader<var>>(hdr.sectionCount) };
-                const auto sectionNames{ stream.readArray<string>(hdr.sectionCount) };
+                const auto sectionNames{ stream.readArray<std::string>(hdr.sectionCount) };
                 
                 // Map the chunk data into these data views
                 base::streamview chunk_1(stream, hdr.chunk1.size);
@@ -530,7 +530,7 @@ namespace grabbed
                     }
                 }
 
-                auto findIndex = [&sectionNames](const string& sectionName)
+                auto findIndex = [&sectionNames](const std::string& sectionName)
                 {
                     size_t index{ 0 };
                     while (index < sectionNames.size()) {

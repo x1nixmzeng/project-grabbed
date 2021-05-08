@@ -77,7 +77,7 @@ namespace grabbed
             auto un_4 = stream.readArray<base::endianBig<u32>>(xmlHeader.nodeCount);
 
             // string table here - note the string specialisation to read c-strings!
-            auto stringTable = stream.readArray<string>(xmlHeader.nodeCount);
+            auto stringTable = stream.readArray<std::string>(xmlHeader.nodeCount);
 
             // padded to 4 bytes?!
             

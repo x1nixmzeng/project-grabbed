@@ -22,7 +22,7 @@ namespace grabbed
         class CaffDB
         {
         public:
-            std::map<string, CaffEntry> data;
+            std::map<std::string, CaffEntry> data;
         };
 
         class CaffReader

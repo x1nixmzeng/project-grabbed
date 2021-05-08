@@ -31,7 +31,7 @@ namespace grabbed
                     break;
                 }
 
-                string name{ item.name };
+                std::string name{ item.name };
 
                 AidListData entry{ name, hashutils::makeHash(name) };
 

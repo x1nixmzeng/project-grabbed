@@ -14,8 +14,8 @@ namespace grabbed
                 Text,
             };
 
-            string name;
-            std::vector<std::pair<TokenType, wstring>> tokens;
+            std::string name;
+            std::vector<std::pair<TokenType, std::wstring>> tokens;
         };
         
         class Dialog
@@ -23,13 +23,13 @@ namespace grabbed
         public:
             DialogData data;
 
-            Dialog(const wstring& source);
+            Dialog(const std::wstring& source);
 
-            static bool resolveHead(const wstring& source, string& result);
-            static bool resolveEvent(const wstring& source, string& result);
-            static bool resolvePowerup(const wstring& source, string& result);
+            static bool resolveHead(const std::wstring& source, std::string& result);
+            static bool resolveEvent(const std::wstring& source, std::string& result);
+            static bool resolvePowerup(const std::wstring& source, std::string& result);
 
-            static bool resolve(const wstring& source, string& result);
+            static bool resolve(const std::wstring& source, std::string& result);
         };
     }
 }

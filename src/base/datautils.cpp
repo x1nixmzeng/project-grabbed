@@ -2,7 +2,7 @@
 
 namespace grabbed::base::datautils
 {
-    void sanityCheck(string& str)
+    void sanityCheck(std::string& str)
     {
         for (auto& c : str) {
             if (std::isprint(c) == 0) {

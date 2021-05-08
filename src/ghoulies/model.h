@@ -48,7 +48,7 @@ namespace grabbed
         {
             u32 index{ 0 };
             TextureDetailType type;
-            std::vector<string> shaders;
+            std::vector<std::string> shaders;
         };
 
         struct SubModel
@@ -74,7 +74,7 @@ namespace grabbed
 
         struct ModelInstance
         {
-            using paramtype = std::pair<string, buffer>;
+            using paramtype = std::pair<std::string, buffer>;
             std::vector<paramtype> params;
             std::vector<BoneInstance> bones;
             
@@ -83,15 +83,15 @@ namespace grabbed
             std::vector<Vec3> vertices;
             std::vector<Vec2> uvs;
 
-            bool hasParam(const string& name) const;
-            bool readParam(const string& name, u32& value) const;
-            bool readParam(const string& name, u8& value) const;
+            bool hasParam(const std::string& name) const;
+            bool readParam(const std::string& name, u32& value) const;
+            bool readParam(const std::string& name, u8& value) const;
         };
 
         class ModelDb
         {
         public:
-            std::map<string, ModelInstance> models;
+            std::map<std::string, ModelInstance> models;
         };
 
         class ModelReader : public KnownFormat<ResourceType::eResModel>
@@ -101,7 +101,7 @@ namespace grabbed
 
             virtual bool read(base::stream& stream, Context& context) override;
 
-            virtual bool canAdd(const string& name) const override;
+            virtual bool canAdd(const std::string& name) const override;
 
             void setOnlyTextures(bool enabled) { m_onlyTextures = enabled; }
 

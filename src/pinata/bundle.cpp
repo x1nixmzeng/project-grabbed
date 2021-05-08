@@ -119,9 +119,9 @@ namespace grabbed
 #pragma pack(pop)
 
             template <template<typename T> class var>
-            wstring readWCString(base::stream& stream)
+            std::wstring readWCString(base::stream& stream)
             {
-                wstring result;
+                std::wstring result;
                 result.reserve(16);
 
                 while (stream.canRead(sizeof(u16)))
@@ -222,8 +222,8 @@ namespace grabbed
                 {
                     for (const LSBLInfo<var>& item : offsets)
                     {
-                        std::vector<string> names;
-                        std::vector<wstring> values;
+                        std::vector<std::string> names;
+                        std::vector<std::wstring> values;
 
                         assert_true(item.flag_1 == 1);
                         assert_true(item.flag_2 == 2);
