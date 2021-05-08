@@ -67,4 +67,14 @@ group "tools"
     add_tool ('pinata', 'pinata_app', 'pinata')
     add_tool ('perfectdark', 'perfectdark_app', 'perfectdark')
 
+    add_tool ('onevs', 'onevs_app', 'onevsdump')
+
+    configuration {}
+       files {
+            path.join(SRC_DIR, "img", "img.h"),
+       }
+
+        links {
+            "img",
+        }
 
