@@ -7,6 +7,8 @@ namespace grabbed
 {
     namespace img
     {
+        size_t GetTextureDataSize(int width, int height, X360TextureFormat textureFormat);
+
         buffer ConvertToLinearTexture(const buffer& data, int width, int height, X360TextureFormat textureFormat);
 
         int XGAddress2DTiledX(int Offset, int Width, int TexelPitch);
@@ -16,7 +18,7 @@ namespace grabbed
         buffer DecodeDXT3(buffer& data, int width, int height);
         buffer DecodeDXT5(buffer& data, int width, int height);
 
-        u32 ReadDXNBlockBits(buffer& data, int blockStart);
+        uint64_t ReadDXNBlockBits(buffer& data, int blockStart);
 
         // Same as 3Dc normal compression
         // Two-channel version of DXT5A

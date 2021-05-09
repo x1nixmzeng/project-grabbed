@@ -9,6 +9,7 @@ namespace grabbed::base::fileutils
         auto file = std::ofstream(filename, std::ofstream::binary);
         if (file) {
             constexpr static const size_t sc_swapSize{ 1024 * 4 };
+
             buffer swap(sc_swapSize);
             while (length) {
                 size_t count = (length > sc_swapSize) ? sc_swapSize : length;
@@ -16,8 +17,17 @@ namespace grabbed::base::fileutils
                 file.write(reinterpret_cast<const char*>(swap.data()), count);
                 length -= count;
             }
-        }
 
-        file.close();
+            file.close();
+        }
+    }
+
+    void saveToDisk(const buffer& buffer, const std::string& filename)
+    {
+        auto file = std::ofstream(filename, std::ofstream::binary);
+        if (file) {
+            file.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+            file.close();
+        }
     }
 }

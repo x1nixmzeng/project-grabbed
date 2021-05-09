@@ -12,6 +12,7 @@
 #include "base/textureutils.h"
 
 #include "img/img.h"
+#include "img/converters.h"
 
 #include <vector>
 #include <string>
@@ -97,7 +98,7 @@ namespace grabbed
                 var<u32> index; // from 1
                 var<u32> offset; // relevant to chunk
                 var<u32> size;
-                u8 chunkId; // index from 1
+                u8 chunkId; // from 1, matches the group index associated with ".data" ".stream" or ".gpu"
                 u8 unknown; // ?
             };
 #pragma pack(pop)
@@ -152,35 +153,7 @@ namespace grabbed
 
             constexpr static auto HeaderSize{ sizeof(HeaderLe) };
 
-            size_t GetTextureDataSize(int _width, int _height, X360TextureFormat _textureFormat)
-            {
-                int textureDataSize = 0;
-                switch (_textureFormat)
-                {
-                case X360TextureFormat::A8L8:
-                    textureDataSize = (_width * _height) * 2;
-                    break;
-                case X360TextureFormat::L8:
-                    textureDataSize = (_width * _height);
-                    break;
-                case X360TextureFormat::DXT1:
-                    textureDataSize = (_width * _height / 2);
-                    break;
-                case X360TextureFormat::DXT3:
-                case X360TextureFormat::DXT5:
-                case X360TextureFormat::DXN:
-                    textureDataSize = (_width * _height);
-                    break;
-                case X360TextureFormat::A8R8G8B8:
-                    textureDataSize = (_width * _height) * 4;
-                    break;
-                case X360TextureFormat::CTX1:
-                    textureDataSize = (_width * _height / 2);
-                    break;
-                }
 
-                return textureDataSize;
-            }
 
 #pragma pack(push,1)
             template <template<typename> class var>
@@ -564,9 +537,10 @@ namespace grabbed
                         def.width = textureHeader.width;
                         def.height = textureHeader.height;
 
-                        // hot swap between common 360 format enum
+                        // map to 360 texture format enum
                         auto tfmt = static_cast<X360TextureFormat>(textureHeader.format);
 
+                        // assert for now - there are no exotic formats in ths caff file - TEXTURE_FORMAT_R5G6B5 / TEXTURE_FORMAT_X4R4G4B4 / TEXTURE_FORMAT_L8
                         assert_true(tfmt == X360TextureFormat::DXT1 || tfmt == X360TextureFormat::DXT3 || tfmt == X360TextureFormat::DXT5 || tfmt == X360TextureFormat::A8R8G8B8);
 
                         def.format = base::textureutils::makeGenericType(tfmt);
@@ -581,7 +555,7 @@ namespace grabbed
 
                                 stream.seek(localGpuOffset);
 
-                                auto size = GetTextureDataSize(def.width, def.height, tfmt);
+                                auto size = img::GetTextureDataSize(def.width, def.height, tfmt);
 
                                 buffer test;
                                 test.resize(size);
