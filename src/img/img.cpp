@@ -42,19 +42,60 @@ namespace grabbed
             return true;
         }
 
-        bool convertDdsAndSavePng(const buffer& imageData, const string& filename, size_t width, size_t height, XboxD3DFormat sourceFormat)
+        buffer createMemoryDds(const buffer& imageData, size_t width, size_t height, X360TextureFormat sourceFormat)
+        {
+            DirectX::DDS_HEADER imageHeader{};
+
+            imageHeader.size = sizeof(DirectX::DDS_HEADER);
+            imageHeader.ddspf.size = sizeof(DirectX::DDS_PIXELFORMAT);
+            imageHeader.ddspf.flags = DDS_FOURCC;
+            imageHeader.flags = DDS_HEADER_FLAGS_TEXTURE;
+            imageHeader.caps = DDS_SURFACE_FLAGS_TEXTURE;
+
+            switch (sourceFormat)
+            {
+            case X360TextureFormat::DXT1:
+                imageHeader.ddspf.fourCC = MAKEFOURCC('D', 'X', 'T', '1');
+                break;
+            case X360TextureFormat::DXT3:
+                imageHeader.ddspf.fourCC = MAKEFOURCC('D', 'X', 'T', '3');
+                break;
+            case X360TextureFormat::DXT5:
+                imageHeader.ddspf.fourCC = MAKEFOURCC('D', 'X', 'T', '5');
+                break;
+            }
+
+            imageHeader.mipMapCount = 1;
+
+            imageHeader.width = width;
+            imageHeader.height = height;
+
+            buffer dds(sizeof(DirectX::DDS_MAGIC) + sizeof(DirectX::DDS_HEADER) + imageData.size());
+
+            auto ptr = dds.data();
+
+            memcpy(ptr, &DirectX::DDS_MAGIC, sizeof(DirectX::DDS_MAGIC));
+            ptr += sizeof(DirectX::DDS_MAGIC);
+            memcpy(ptr, &imageHeader, sizeof(imageHeader));
+            ptr += sizeof(imageHeader);
+            memcpy(ptr, imageData.data(), imageData.size());
+
+            return dds;
+        }
+
+        bool convertDdsAndSavePng(const buffer& imageData, const std::string& filename, size_t width, size_t height, X360TextureFormat sourceFormat)
         {
             DirectX::TexMetadata metadata;
-
-            if (!makeMetadata(metadata, width, height, sourceFormat)) {
-                return false;
-            }
 
             bool result = false;
             DirectX::ScratchImage scratch;
 
-            // Note: this is a patched method which allow headerless images with just metadata
-            auto hr = 0;// DirectX::LoadFromDDSMemoryHeaderless(imageData.data(), imageData.size(), metadata, scratch);
+            auto data = ConvertToLinearTexture(imageData, width, height, sourceFormat);
+
+            // Make headerless data, headered!
+            auto dds{ createMemoryDds(data, width, height, sourceFormat) };
+
+            auto hr = DirectX::LoadFromDDSMemory(dds.data(), dds.size(), DirectX::DDS_FLAGS_NONE, &metadata, scratch);
             if (SUCCEEDED(hr)) {
                 if (DirectX::IsCompressed(metadata.format)) {
                     auto img = scratch.GetImage(0, 0, 0);
@@ -79,7 +120,7 @@ namespace grabbed
             return result;
         }
 
-        bool convertRGBAndSavePng(const buffer& imageData, const string& filename, size_t width, size_t height, XboxD3DFormat sourceFormat)
+        bool convertRGBAndSavePng(const buffer& imageData, const std::string& filename, size_t width, size_t height, XboxD3DFormat sourceFormat)
         {
             // We only handle one raw RGB source for now
             if (sourceFormat != XboxD3DFormat::X_D3DFMT_LIN_A8R8G8B8) {
@@ -111,50 +152,65 @@ namespace grabbed
 
         bool convertToRGBA(buffer& result, const buffer& imageData, size_t width, size_t height, X360TextureFormat sourceFormat)
         {
-            if (sourceFormat == X360TextureFormat::DXT1) {
-
-                auto data = ConvertToLinearTexture(imageData, width, height, sourceFormat);
-
-                result = DecodeDXT1(data, width, height);
-                
-                if (0) {
-                    // Assumes images have an alpha
-                    auto stbiRes = stbi_write_png("converted_360.png", width, height, 4, result.data(), 0);
-                    if (stbiRes == 1) {
-                        return true;
-                    }
+            switch (sourceFormat)
+            {
+                case X360TextureFormat::DXT1:
+                {
+                    auto data = ConvertToLinearTexture(imageData, width, height, sourceFormat);
+                    result = DecodeDXT1(data, width, height);
+                    return true;
                 }
 
-                return true;
-            }
-
-            if (sourceFormat == X360TextureFormat::CTX1) {
-                auto data = ConvertToLinearTexture(imageData, width, height, sourceFormat);
-
-                result = DecodeCTX1(data, width, height);
-
-                if (1) {
-                    // Assumes images have an alpha
-                    auto stbiRes = stbi_write_png("ctx.png", width, height, 4, result.data(), 0);
-                    if (stbiRes == 1) {
-                        return true;
-                    }
+                case X360TextureFormat::DXT3:
+                {
+                    auto data = ConvertToLinearTexture(imageData, width, height, sourceFormat);
+                    result = DecodeDXT3(data, width, height);
+                    return true;
                 }
 
-                return true;
+                case X360TextureFormat::DXT5:
+                {
+                    auto data = ConvertToLinearTexture(imageData, width, height, sourceFormat);
+                    result = DecodeDXT5(data, width, height);
+                    return true;
+                }
+
+                case X360TextureFormat::CTX1:
+                {
+                    auto data = ConvertToLinearTexture(imageData, width, height, sourceFormat);
+
+                    result = DecodeCTX1(data, width, height);
+
+                    if (1) {
+                        // Assumes images have an alpha
+                        auto stbiRes = stbi_write_png("ctx.png", width, height, 4, result.data(), 0);
+                        if (stbiRes == 1) {
+                            return true;
+                        }
+                    }
+
+                    return true;
+                }
+
+                case X360TextureFormat::A8R8G8B8:
+                {
+                    result = ConvertToLinearTexture(imageData, width, height, sourceFormat);
+                    return true;
+                }
             }
 
             return false;
         }
 
-        bool convertAndSavePng(const buffer& imageData, const string& filename, size_t width, size_t height, XboxD3DFormat sourceFormat)
+        bool convertAndSavePng(const buffer& imageData, const std::string& filename, size_t width, size_t height, XboxD3DFormat sourceFormat)
         {
             switch (sourceFormat)
             {
             case XboxD3DFormat::X_D3DFMT_DXT1:
             case XboxD3DFormat::X_D3DFMT_DXT3:
             case XboxD3DFormat::X_D3DFMT_DXT5:
-                return convertDdsAndSavePng(imageData, filename, width, height, sourceFormat);
+                //return convertDdsAndSavePng(imageData, filename, width, height, sourceFormat);
+                break;
 
             case XboxD3DFormat::X_D3DFMT_LIN_A8R8G8B8:
                 return convertRGBAndSavePng(imageData, filename, width, height, sourceFormat);
@@ -163,9 +219,14 @@ namespace grabbed
             return false;
         }
 
-        bool convertAndSavePng(const buffer& imageData, const string& filename, size_t width, size_t height, X360TextureFormat sourceFormat)
+        bool convertAndSavePng(const buffer& imageData, const std::string& filename, size_t width, size_t height, X360TextureFormat sourceFormat)
         {
             return false;
+        }
+
+        bool savePngFromRGBA(const std::string& filename, size_t width, size_t height, const buffer& imageData)
+        {
+            return stbi_write_png(filename.c_str(), width, height, 4, imageData.data(), 0);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace grabbed
             return result;
         }
 
-        type createArgs(string& argList)
+        type createArgs(std::string& argList)
         {
             type result;
             size_t last = 0;
@@ -41,7 +41,7 @@ namespace grabbed
             return result;
         }
 
-        bool splittype::read(const string& name, string& result) const
+        bool splittype::read(const std::string& name, std::string& result) const
         {
             const auto& cit{ mapped.find(name) };
             if (cit != mapped.cend()) {
@@ -53,7 +53,7 @@ namespace grabbed
             return false;
         }
 
-        bool splittype::existsLoose(const string& name) const
+        bool splittype::existsLoose(const std::string& name) const
         {
             return (std::find(loose.begin(), loose.end(), name) != loose.end());
         }
@@ -62,7 +62,7 @@ namespace grabbed
         {
             splittype result;
 
-            for (const string& arg : args) {
+            for (const std::string& arg : args) {
                 if (arg.empty()) {
                     continue;
                 }

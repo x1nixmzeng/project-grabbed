@@ -11,7 +11,7 @@ namespace grabbed
 {
     namespace
     {
-        string resolveFile(u32 hash)
+        std::string resolveFile(u32 hash)
         {
             auto resolved = [=]() -> const char*
             {
@@ -37,12 +37,12 @@ namespace grabbed
     {
     }
 
-    std::unique_ptr<base::filestream> ghoulieDump::openFile(const string& filename)
+    std::unique_ptr<base::filestream> ghoulieDump::openFile(const std::string& filename)
     {
         return std::make_unique<base::filestream>(filename);
     }
 
-    void ghoulieDump::parseAll(const string& path)
+    void ghoulieDump::parseAll(const std::string& path)
     {
         std::filesystem::path root{ path };
         if (std::filesystem::exists(root)) {

@@ -34,7 +34,7 @@ namespace grabbed
             u32 m_frames;
             u32 m_width;
             u32 m_height;
-            string m_name;
+            std::string m_name;
             
             bool hasGlyph(u16 codename) const;
         };
@@ -100,7 +100,7 @@ namespace grabbed
             FontReader(std::shared_ptr<FontDb> database);
 
             virtual bool read(base::stream& stream, ghoulies::Context& context) override;
-            virtual bool canAdd(const string& name) const override;
+            virtual bool canAdd(const std::string& name) const override;
 
         private:
             std::shared_ptr<FontDb> m_fonts;

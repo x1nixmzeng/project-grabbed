@@ -9,7 +9,7 @@ namespace grabbed
         void stream::read(buffer& buffer, size_t length)
         {
             if (buffer.size() < length) {
-                assert_always("error: buffer does not have enough space to read this length");
+                assert_always("error: buffer does not have enough space to read {} bytes", length);
                 return;
             }
 
@@ -31,7 +31,7 @@ namespace grabbed
             readImpl(&buffer[0], buffer.size());
         }
 
-        void stream::readAll(string& string)
+        void stream::readAll(std::string& string)
         {
             auto size{ getSize() - getPosition() };
 
@@ -76,9 +76,9 @@ namespace grabbed
             return getPosition() + offset;
         }
 
-        string stream::readString(size_t length)
+        std::string stream::readString(size_t length)
         {
-            string result;
+            std::string result;
 
             if (!canRead(length * sizeof(u8))) {
                 assert_always("error: unable to read this many characters");
@@ -97,20 +97,21 @@ namespace grabbed
             return result;
         }
 
-        wstring stream::readWString(size_t length)
+        std::wstring stream::readWString(size_t length)
         {
-            wstring result;
+            std::wstring result;
+            result.reserve(128);
 
             if (!canRead(length * sizeof(u16))) {
-                assert_always("error: unable to read this many characters");
+                assert_always("error: unable to read {} characters", length);
                 return result;
             }
 
             result.resize(length);
-            readImpl(&result[0], length * 2);
+            readImpl(&result[0], length * sizeof(u16));
             
             // Strip away any string terminators
-            auto invalid = result.find_first_of(L'\0', 0);
+            auto invalid = result.find_first_of(L'\0');
             if (invalid != result.npos) {
                 return result.substr(0, invalid);
             }
@@ -118,9 +119,9 @@ namespace grabbed
             return result;
         }
 
-        string stream::readCString()
+        std::string stream::readCString()
         {
-            string result;
+            std::string result;
             result.reserve(128);
 
             u8 data(0);
@@ -136,9 +137,9 @@ namespace grabbed
             return result;
         }
 
-        wstring stream::readWCString()
+        std::wstring stream::readWCString()
         {
-            wstring result;
+            std::wstring result;
             result.reserve(128);
 
             u16 data(0);

@@ -20,7 +20,7 @@ namespace grabbed
 
         struct AnimDB
         {
-            std::map<string, Anim> data;
+            std::map<std::string, Anim> data;
         };
 
         class AnimReader : public BaseFormat
@@ -29,7 +29,7 @@ namespace grabbed
             AnimReader(std::shared_ptr<AnimDB> data);
 
             virtual bool read(base::stream& stream, Context& context) override;
-            virtual bool canAdd(const string& name) const override;
+            virtual bool canAdd(const std::string& name) const override;
 
         private:
             std::shared_ptr<AnimDB> m_data;

@@ -21,16 +21,16 @@ namespace grabbed
                 
                 size_t width;
                 size_t height;
-                X360TextureFormat format;
+                GenericTextureType format;
             };
 
             struct Metadata
             {
                 //string fileName;
-                string originalName;
+                std::string originalName;
 
-                std::vector<string> subfiles;
-                std::vector<string> strings;
+                std::vector<std::string> subfiles;
+                std::vector<std::string> strings;
 
                 std::vector<TextureData> textures;
             };

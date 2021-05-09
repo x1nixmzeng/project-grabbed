@@ -15,8 +15,8 @@ namespace grabbed
         class CueListDb
         {
         public:
-            std::map<string, std::vector<string>> m_cuelist;
-            size_t GetSize(const string src) const;
+            std::map<std::string, std::vector<std::string>> m_cuelist;
+            size_t GetSize(const std::string src) const;
         };
 
         class CueListReader : public BaseFormat

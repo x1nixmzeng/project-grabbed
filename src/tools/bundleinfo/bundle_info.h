@@ -16,9 +16,9 @@ namespace grabbed
     public:
         bundleinfo();
 
-        std::unique_ptr<base::filestream> openFile(const string& filename);
+        std::unique_ptr<base::filestream> openFile(const std::string& filename);
 
-        void readBundle(const string& filename);
+        void readBundle(const std::string& filename);
 
         void listFiles();
 
@@ -34,7 +34,7 @@ namespace grabbed
         {
             bundleinfo bundleInfo;
             
-            string path;
+            std::string path;
             if (args.read("bundleinfo", path))
             {
                 bundleInfo.readBundle(path);

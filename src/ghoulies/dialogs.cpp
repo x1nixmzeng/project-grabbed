@@ -8,7 +8,7 @@ namespace grabbed
 {
     namespace ghoulies
     {
-        Dialog::Dialog(const wstring& source)
+        Dialog::Dialog(const std::wstring& source)
         {
             DialogData::TokenType current = DialogData::TokenType::Text;
             size_t stringStart = 0;
@@ -22,7 +22,7 @@ namespace grabbed
                 {
                     if (source[currentPosition] == '}')
                     {
-                        wstring payload = source.substr(stringStart, currentPosition - stringStart);
+                        std::wstring payload = source.substr(stringStart, currentPosition - stringStart);
                         data.tokens.push_back(std::make_pair(DialogData::TokenType::Option, payload));
 
                         stringStart = currentPosition + 1;
@@ -37,7 +37,7 @@ namespace grabbed
                     {
                         if (stringStart < currentPosition)
                         {
-                            wstring payload = source.substr(stringStart, currentPosition - stringStart);
+                            std::wstring payload = source.substr(stringStart, currentPosition - stringStart);
                             data.tokens.push_back(std::make_pair(DialogData::TokenType::Text, payload));
                         }
 
@@ -54,7 +54,7 @@ namespace grabbed
             // Fixup missing end tags if this required
             if (stringStart < currentPosition)
             {
-                wstring payload = source.substr(stringStart, currentPosition - stringStart);
+                std::wstring payload = source.substr(stringStart, currentPosition - stringStart);
                 data.tokens.push_back(std::make_pair(DialogData::TokenType::Text, payload));
 
                 data.tokens.push_back(std::make_pair(DialogData::TokenType::Option, L"end"));
@@ -142,7 +142,7 @@ namespace grabbed
             };
             
             template<size_t Size>
-            bool doesStringExist(const string& source, const char* const(&stringList)[Size])
+            bool doesStringExist(const std::string& source, const char* const(&stringList)[Size])
             {
                 for (size_t i(0); i < Size; ++i) {
                     if (source.compare(stringList[i]) == 0) {
@@ -154,9 +154,9 @@ namespace grabbed
             }
         }
 
-        bool Dialog::resolveHead(const wstring& source, string& result)
+        bool Dialog::resolveHead(const std::wstring& source, std::string& result)
         {
-            string headSource = base::stringutils::stringFromWide(source);
+            std::string headSource = base::stringutils::stringFromWide(source);
 
             if (doesStringExist(headSource, sc_dialogheads)) {
                 result.clear();
@@ -169,9 +169,9 @@ namespace grabbed
             return false;
         }
 
-        bool Dialog::resolveEvent(const wstring& source, string& result)
+        bool Dialog::resolveEvent(const std::wstring& source, std::string& result)
         {
-            string eventSource = base::stringutils::stringFromWide(source);
+            std::string eventSource = base::stringutils::stringFromWide(source);
 
             if (doesStringExist(eventSource, sc_eventicons)) {
                 result.clear();
@@ -184,9 +184,9 @@ namespace grabbed
             return false;
         }
 
-        bool Dialog::resolvePowerup(const wstring& source, string& result)
+        bool Dialog::resolvePowerup(const std::wstring& source, std::string& result)
         {
-            string powerupSource = base::stringutils::stringFromWide(source);
+            std::string powerupSource = base::stringutils::stringFromWide(source);
 
             if (doesStringExist(powerupSource, sc_powerups)) {
                 result.clear();
@@ -199,7 +199,7 @@ namespace grabbed
             return false;
         }
 
-        bool Dialog::resolve(const wstring& source, string& result)
+        bool Dialog::resolve(const std::wstring& source, std::string& result)
         {
             if (resolveHead(source, result)) {
                 return true;

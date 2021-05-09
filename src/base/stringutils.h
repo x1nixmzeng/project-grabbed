@@ -2,15 +2,14 @@
 
 #include "base/types.h"
 
-namespace grabbed
+namespace grabbed::base::stringutils
 {
-    namespace base
-    {
-        namespace stringutils
-        {
-            bool readLine(const string& source, size_t& offset, size_t& size);
+    bool readLine(const std::string& source, size_t& offset, size_t& size);
 
-            string stringFromWide(const wstring& source);
-        }
-    }
+    std::string stringFromWide(const std::wstring& source);
+
+    void toUpper(std::string& str);
+    void toUpper(std::wstring& str);
+    void toLower(std::string& str);
+    void toLower(std::wstring& str);
 }

@@ -8,21 +8,12 @@ namespace grabbed
 {
     namespace base
     {
-        namespace
-        {
-            string extractFileName(const string& pathname)
-            {
-                std::filesystem::path path{ pathname };
-                return path.filename().generic_string();
-            }
-        }
-
-        filestream::filestream(const string &filename)
+        filestream::filestream(const std::string_view& filename)
             : m_size(0)
             , m_position(0)
         {
             m_openPathName = filename;
-            m_openFileName = extractFileName(filename);
+            m_openFileName = std::filesystem::path(filename).filename().generic_string();
             
             m_file = std::ifstream(m_openPathName, std::ios::in | std::ios::binary);
             if (m_file) {
@@ -33,7 +24,7 @@ namespace grabbed
 #if _DEBUG
             else {
                 auto currentPath = std::filesystem::current_path().generic_string();
-                assert_always("Failed to open file. Check current path is valid: %s", currentPath.c_str());
+                assert_always("Failed to open {}\nCurrent path is: {}", filename, currentPath);
             }
 #endif
         }
@@ -83,7 +74,7 @@ namespace grabbed
             }
 
             if (!canRead(size)) {
-                assert_always("error: unable to read this length");
+                assert_always("error: unable to read {} bytes", size);
                 return;
             }
             
@@ -107,12 +98,12 @@ namespace grabbed
             readImpl(ms.getData(), getSize());
         }
 
-        const string& filestream::getPathName() const
+        const std::string& filestream::getPathName() const
         {
             return m_openPathName;
         }
 
-        const string& filestream::getFileName() const
+        const std::string& filestream::getFileName() const
         {
             return m_openFileName;
         }

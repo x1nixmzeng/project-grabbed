@@ -13,12 +13,12 @@ namespace grabbed
     {
     }
 
-    std::unique_ptr<base::filestream> demandInfo::openFile(const string& filename)
+    std::unique_ptr<base::filestream> demandInfo::openFile(const std::string& filename)
     {
         return std::make_unique<base::filestream>(filename);
     }
 
-    string resolveFile(u32 hash)
+    std::string resolveFile(u32 hash)
     {
         auto resolved = [=]() -> const char*
         {
@@ -37,7 +37,7 @@ namespace grabbed
         return {};
     }
 
-    void demandInfo::parseAll(const string& path)
+    void demandInfo::parseAll(const std::string& path)
     {
         std::filesystem::path root{ path };
         if (std::filesystem::exists(root)) {

@@ -15,8 +15,8 @@ namespace grabbed
         public:
             struct Instance
             {
-                string name;
-                string source;
+                std::string name;
+                std::string source;
 
                 u32 channels;
                 u32 freq;

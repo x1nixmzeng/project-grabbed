@@ -82,7 +82,7 @@ namespace grabbed
 
         struct Context
         {
-            string name;
+            std::string name;
             ResourceHeader header;
 
             size_t fileChunkOffset{ 0 };
@@ -121,10 +121,10 @@ namespace grabbed
             virtual ~BaseFormat() {}
 
             virtual bool read(base::stream& stream, Context& context) = 0;
-            virtual bool canAdd(const string& name) const { return true; }
+            virtual bool canAdd(const std::string& name) const { return true; }
 
             bool readBundled(base::stream& stream, Context& content);
-            bool readLoose(base::stream& stream, string& name);
+            bool readLoose(base::stream& stream, std::string& name);
         };
 
         template<ResourceType Type>

@@ -56,7 +56,7 @@ namespace grabbed
             };
         }
 
-        bool ModelInstance::hasParam(const string& name) const
+        bool ModelInstance::hasParam(const std::string& name) const
         {
             auto cit = std::find_if(params.begin(), params.end(), [&](const auto& item)
             {
@@ -66,7 +66,7 @@ namespace grabbed
             return (cit != params.cend());
         }
 
-        bool ModelInstance::readParam(const string& name, u32& value) const
+        bool ModelInstance::readParam(const std::string& name, u32& value) const
         {
             auto cit = std::find_if(params.begin(), params.end(), [&](const auto& item)
             {
@@ -85,7 +85,7 @@ namespace grabbed
             return false;
         }
 
-        bool ModelInstance::readParam(const string& name, u8& value) const
+        bool ModelInstance::readParam(const std::string& name, u8& value) const
         {
             auto cit = std::find_if(params.begin(), params.end(), [&](const auto& item)
             {
@@ -177,7 +177,7 @@ namespace grabbed
             return true;
         }
 
-        bool ModelReader::canAdd(const string& name) const
+        bool ModelReader::canAdd(const std::string& name) const
         {
             return m_modelDb->models.find(name) == m_modelDb->models.end();
         }
@@ -234,7 +234,7 @@ namespace grabbed
                         // offset this a bit
                         params.stream.seek(guessedOffset + texture.texture_offset);
 
-                        string name;
+                        std::string name;
                         name.append("texturefile");
                         name.append(std::to_string(i));
 

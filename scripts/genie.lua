@@ -13,6 +13,16 @@ newoption {
 }
 
 newoption {
+    trigger = "vs-toolset",
+    value = "default",
+    description = "Choose a VS toolset.",
+    allowed = {
+        { "default",   "Default" },
+        { "clang",     "Clang" },
+    }
+}
+
+newoption {
     trigger = "audio-impl",
     value = "stub",
     description = "Backend audio implementation",
@@ -102,6 +112,10 @@ solution "grabbed"
 
     location(ROOT_DIR)
     
+    if "clang" == _OPTIONS["vs-toolset"] then
+        premake.vstudio.toolset = ("ClangCL")
+    end
+
     group "external"
         dofile "zlib.lua"
         dofile "dxt.lua"

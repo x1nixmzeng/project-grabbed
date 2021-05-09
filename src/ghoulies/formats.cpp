@@ -103,7 +103,7 @@ namespace grabbed
             return read(stream, context);
         }
 
-        bool BaseFormat::readLoose(base::stream& stream, string& name)
+        bool BaseFormat::readLoose(base::stream& stream, std::string& name)
         {
             // resource already exists
             if (canAdd(name) == false) {

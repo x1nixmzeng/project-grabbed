@@ -14,12 +14,12 @@ namespace grabbed
 
     }
 
-    std::unique_ptr<base::filestream> bundleinfo::openFile(const string& filename)
+    std::unique_ptr<base::filestream> bundleinfo::openFile(const std::string& filename)
     {
         return std::make_unique<base::filestream>(filename);
     }
 
-    void bundleinfo::readBundle(const string& filename)
+    void bundleinfo::readBundle(const std::string& filename)
     {
         auto file = openFile(filename);
         if (file->isOpen())

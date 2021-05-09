@@ -6,7 +6,7 @@
 
 namespace grabbed
 {
-    bool confirm_break(string& context);
+    bool confirm_break(std::string& context);
 
     template <typename... Args>
     bool confirm(const char* title, const char* function, unsigned int line, const char* format, const Args&... args) {

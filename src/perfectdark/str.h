@@ -13,8 +13,8 @@ namespace grabbed
         class StrDB
         {
         public:
-            std::map<string, wstring> data;
-            string debugName;
+            std::map<std::string, std::wstring> data;
+            std::string debugName;
         };
 
         class StrReader

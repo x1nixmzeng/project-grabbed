@@ -43,7 +43,7 @@ namespace grabbed
             return true;
         }
 
-        bool TextureReader::canAdd(const string& name) const
+        bool TextureReader::canAdd(const std::string& name) const
         {
             const auto& data{ m_textures->m_storage };
             auto it = std::find_if(data.begin(), data.end(), [&](const TextureData& item) { return item.name == name; });

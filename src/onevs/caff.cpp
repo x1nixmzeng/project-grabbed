@@ -9,8 +9,10 @@
 #include "base/datautils.h"
 #include "base/fileutils.h"
 #include "base/output.h"
+#include "base/textureutils.h"
 
 #include "img/img.h"
+#include "img/converters.h"
 
 #include <vector>
 #include <string>
@@ -61,8 +63,8 @@ namespace grabbed
 
             struct CaffAreaSrc
             {
-                string Name;
-                string Version;
+                std::string Name;
+                std::string Version;
             };
 
             template <template<typename> class var>
@@ -96,7 +98,7 @@ namespace grabbed
                 var<u32> index; // from 1
                 var<u32> offset; // relevant to chunk
                 var<u32> size;
-                u8 chunkId; // index from 1
+                u8 chunkId; // from 1, matches the group index associated with ".data" ".stream" or ".gpu"
                 u8 unknown; // ?
             };
 #pragma pack(pop)
@@ -151,35 +153,7 @@ namespace grabbed
 
             constexpr static auto HeaderSize{ sizeof(HeaderLe) };
 
-            size_t GetTextureDataSize(int _width, int _height, X360TextureFormat _textureFormat)
-            {
-                int textureDataSize = 0;
-                switch (_textureFormat)
-                {
-                case X360TextureFormat::A8L8:
-                    textureDataSize = (_width * _height) * 2;
-                    break;
-                case X360TextureFormat::L8:
-                    textureDataSize = (_width * _height);
-                    break;
-                case X360TextureFormat::DXT1:
-                    textureDataSize = (_width * _height / 2);
-                    break;
-                case X360TextureFormat::DXT3:
-                case X360TextureFormat::DXT5:
-                case X360TextureFormat::DXN:
-                    textureDataSize = (_width * _height);
-                    break;
-                case X360TextureFormat::A8R8G8B8:
-                    textureDataSize = (_width * _height) * 4;
-                    break;
-                case X360TextureFormat::CTX1:
-                    textureDataSize = (_width * _height / 2);
-                    break;
-                }
 
-                return textureDataSize;
-            }
 
 #pragma pack(push,1)
             template <template<typename> class var>
@@ -269,16 +243,16 @@ namespace grabbed
             template <template<typename> class var>
             struct TextureHeader
             {
-                var<u32> flags; // 438305106
+                u8 flags[3];
+                u8 format;
                 var<u32> zero1;
                 var<u32> zero2;
                 var<u16> width;
                 var<u16> height;
                 var<i32> unknown_3;
                 var<i32> unknown_4;
-                u8 flag_un1;
-                u8 flag_un2[3];
-                var<X360TextureFormat> format; // not sure this matches the 360 rareview enum - dxt1 == 0x3c
+                var<u32> unknown_5; // 8-bit flags
+                var<u32> unknown_6;
             };
 
             constexpr static auto TextureHeaderSize = sizeof(TextureHeader<base::endianLittle>);
@@ -473,7 +447,7 @@ namespace grabbed
                 stream.seek(hdr.headerSize);
 
                 const auto sectionInfo{ stream.readArray<sectionInfoHeader<var>>(hdr.sectionCount) };
-                const auto sectionNames{ stream.readArray<string>(hdr.sectionCount) };
+                const auto sectionNames{ stream.readArray<std::string>(hdr.sectionCount) };
                 
                 // Map the chunk data into these data views
                 base::streamview chunk_1(stream, hdr.chunk1.size);
@@ -529,7 +503,7 @@ namespace grabbed
                     }
                 }
 
-                auto findIndex = [&sectionNames](const string& sectionName)
+                auto findIndex = [&sectionNames](const std::string& sectionName)
                 {
                     size_t index{ 0 };
                     while (index < sectionNames.size()) {
@@ -538,14 +512,13 @@ namespace grabbed
                         }
                         ++index;
                     }
-                
-                    assert_true(index < sectionNames.size());
+               
+                    assert_true(index < sectionNames.size(), "Section {} does not exist", sectionName);
                     return index;
                 };
 
                 const size_t dataIndex{ findIndex(".data") };
-                const size_t gpuIndex{ findIndex(".gpu") };
-
+                
                 const auto so{ hdr.headerSize + hdr.chunk1.size + hdr.chunk2.size };
 
                 // Hacky workaround to extract textures from .data and .gpu sections
@@ -563,21 +536,33 @@ namespace grabbed
 
                         def.width = textureHeader.width;
                         def.height = textureHeader.height;
-                        def.format = textureHeader.format; // not sure this will unpack properly
+
+                        // map to 360 texture format enum
+                        auto tfmt = static_cast<X360TextureFormat>(textureHeader.format);
+
+                        // assert for now - there are no exotic formats in ths caff file - TEXTURE_FORMAT_R5G6B5 / TEXTURE_FORMAT_X4R4G4B4 / TEXTURE_FORMAT_L8
+                        assert_true(tfmt == X360TextureFormat::DXT1 || tfmt == X360TextureFormat::DXT3 || tfmt == X360TextureFormat::DXT5 || tfmt == X360TextureFormat::A8R8G8B8);
+
+                        def.format = base::textureutils::makeGenericType(tfmt);
+
+                        const size_t gpuIndex{ findIndex(".gpu") };
 
                         for (const auto& gpures : resourceList[gpuIndex])
                         {
                             if (gpures.index == res.index)
                             {
                                 const auto localGpuOffset{ so + offsets[gpuIndex] + gpures.offset };
+
                                 stream.seek(localGpuOffset);
 
+                                auto size = img::GetTextureDataSize(def.width, def.height, tfmt);
+
                                 buffer test;
-                                test.resize(GetTextureDataSize(def.width, def.height, X360TextureFormat::DXT1)); // temp dxt1
+                                test.resize(size);
                                 stream.readAll(test);
 
-                                img::convertToRGBA(def.data, test, def.width, def.height, X360TextureFormat::DXT1);
-
+                                img::convertToRGBA(def.data, test, def.width, def.height, tfmt);
+                               
                                 break;
                             }
                         }

@@ -105,7 +105,7 @@ namespace grabbed
             // fallback on this
             stream.seek(expected);
             
-            std::map<size_t, string> mappedNames;
+            std::map<size_t, std::string> mappedNames;
 
             for (size_t i = 0; i < header.resourceCount; ++i) {
                 auto offset = stream.getPosition() - initialOffset;
@@ -140,7 +140,7 @@ namespace grabbed
             return true;
         }
 
-        bool SoundbankReader::canAdd(const string& name) const
+        bool SoundbankReader::canAdd(const std::string& name) const
         {
             assert_true(m_data != nullptr);
             return (m_data->items.find(name) == m_data->items.end());

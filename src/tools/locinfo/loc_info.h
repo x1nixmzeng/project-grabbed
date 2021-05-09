@@ -16,9 +16,9 @@ namespace grabbed
     public:
         locinfo();
 
-        std::unique_ptr<base::filestream> openFile(const string& filename);
+        std::unique_ptr<base::filestream> openFile(const std::string& filename);
 
-        void readLoc(const string& filename);
+        void readLoc(const std::string& filename);
 
         void listText();
 
@@ -34,7 +34,7 @@ namespace grabbed
         {
             locinfo locInfo;
 
-            string path;
+            std::string path;
             if (args.read("locinfo", path))
             {
                 locInfo.readLoc(path);

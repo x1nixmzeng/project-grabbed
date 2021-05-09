@@ -192,7 +192,7 @@ namespace grabbed
             // skip name offset (we can read them)
             stream.skip(fileCount * 4);
 
-            std::vector<string> sourceNames(fileCount);
+            std::vector<std::string> sourceNames(fileCount);
 
             for (size_t i = 0; i < fileCount; ++i) {
                 sourceNames[i] = stream.readCString();
@@ -276,7 +276,7 @@ namespace grabbed
             // skip name offset (we can read them)
             stream.skip(fileCount * 4);
 
-            std::vector<string> sourceNames(fileCount);
+            std::vector<std::string> sourceNames(fileCount);
 
             for (size_t i = 0; i < fileCount; ++i) {
                 sourceNames[i] = stream.readCString();

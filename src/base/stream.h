@@ -44,16 +44,16 @@ namespace grabbed
             size_t calculatePosition(size_t offset) const;
 
             // Reads a fixed-length string from the current position
-            string readString(size_t length);
+            std::string readString(size_t length);
 
             // Reads a fixed-length wide string from the current position
-            wstring readWString(size_t length);
+            std::wstring readWString(size_t length);
 
             // Reads a null-terminated string from the current position
-            string readCString();
+            std::string readCString();
 
             // Reads a null-terminated wide string from the current position
-            wstring readWCString();
+            std::wstring readWCString();
 
             // Read a number of bytes to a preallocated buffer from the current position
             void read(buffer& buffer, size_t length);
@@ -65,7 +65,7 @@ namespace grabbed
             void readAll(buffer& buffer);
 
             // Read the entire stream as a string
-            void readAll(string& string);
+            void readAll(std::string& string);
 
             // Read an instance of a specific type from the current position
             template<typename T>
@@ -118,11 +118,11 @@ namespace grabbed
             }
 
             template<>
-            __forceinline typename std::vector<string> readArray(size_t count)
+            __forceinline typename std::vector<std::string> readArray(size_t count)
             {
-                std::vector<string> result(count);
+                std::vector<std::string> result(count);
                 
-                for (string& item : result) {
+                for (std::string& item : result) {
                     item = readCString();
                 }
 
