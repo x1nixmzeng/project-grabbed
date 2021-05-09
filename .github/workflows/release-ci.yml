@@ -27,8 +27,9 @@ jobs:
 
       - uses: microsoft/setup-msbuild@v1.0.2
 
-      - name: VS2019 project generation with GENie
-        run: gen_vs2019.bat
+      - name: GENie project generation
+        shell: pwsh
+        run: .\gen_vs2019.bat
 
       - name: Build
         working-directory: ${{env.GITHUB_WORKSPACE}}
