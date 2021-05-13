@@ -9,18 +9,18 @@ The source files were originally written as part of a remake of the original Xbo
 
 Over the years I have researched other games developed by Rare, covering their titles on Xbox and Xbox360.
 
-| Game                             | Platform   | Version             |  Formats                                             |
-| -------------------------------- | ---------- | ------------------- | ---------------------------------------------------- |
-| Grabbed by the Ghoulies (demo)   | Xbox       | n/a                 | localisation, audio, fonts, textures, (rough) models |
-| Grabbed by the Ghoulies          | Xbox       | n/a                 | localisation, audio, fonts, textures, (rough) models |
-| Kameo: Elements of Power (alpha) | Xbox       | `CAFF24.09.03.0026` | textures                                             |
-| Conker: Live & Reloaded (demo)   | Xbox       | `CAFF24.09.03.0026` | textures                                             |
-| Conker: Live & Reloaded          | Xbox       | `CAFF28.01.05.0031` | textures                                             |
-| Kameo: Elements of Power         | Xbox360    | `CAFF28.01.05.0031` | localisation                                         |
-| Perfect Dark Zero                | Xbox360    | `CAFF28.01.05.0031` | localisation                                         |
-| Viva Piñata                      | PC/Xbox360 | `CAFF07.08.06.0036` | localisation                                         |
-| Banjo-Kazooie: Nuts & Bolts      | Xbox360    | `CAFF07.08.06.0036` | localisation                                         |
-| 1 vs. 100                        | Xbox360    | `CAFF07.08.06.0036` | textures, (rough) anim/model/pose data               |
+| Game                             | Platform   | Version             |  Formats                             |
+| -------------------------------- | ---------- | ------------------- | ------------------------------------ |
+| Grabbed by the Ghoulies (demo)   | Xbox       | n/a                 | localisation, audio, fonts, textures |
+| Grabbed by the Ghoulies          | Xbox       | n/a                 | localisation, audio, fonts, textures |
+| Kameo: Elements of Power (alpha) | Xbox       | `CAFF24.09.03.0026` | textures                             |
+| Conker: Live & Reloaded (demo)   | Xbox       | `CAFF24.09.03.0026` | textures                             |
+| Conker: Live & Reloaded          | Xbox       | `CAFF28.01.05.0031` | textures                             |
+| Kameo: Elements of Power         | Xbox360    | `CAFF28.01.05.0031` | localisation                         |
+| Perfect Dark Zero                | Xbox360    | `CAFF28.01.05.0031` | localisation                         |
+| Viva Piñata                      | PC/Xbox360 | `CAFF07.08.06.0036` | localisation                         |
+| Banjo-Kazooie: Nuts & Bolts      | Xbox360    | `CAFF07.08.06.0036` | localisation                         |
+| 1 vs. 100                        | Xbox360    | `CAFF07.08.06.0036` | textures (bin), resources (xzp)      |
 
 
 Note that although *1 vs. 100* was not developed by Rare, it uses a very similar CAFF format
