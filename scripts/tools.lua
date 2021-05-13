@@ -79,3 +79,7 @@ group "tools"
             "img",
         }
 
+
+    add_tool ('xzp', 'xzp_dump', 'xzpdump')
+
+

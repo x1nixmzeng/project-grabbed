@@ -1,5 +1,6 @@
 #include "fileutils.h"
 
+#include <filesystem>
 #include <fstream>
 
 namespace grabbed::base::fileutils
@@ -24,6 +25,18 @@ namespace grabbed::base::fileutils
 
     void saveToDisk(const buffer& buffer, const std::string& filename)
     {
+        std::filesystem::path outputName(filename);
+        if (outputName.has_parent_path())
+        {
+            auto desiredPath = outputName.parent_path();
+
+            std::error_code err;
+            if (!std::filesystem::exists(desiredPath, err))
+            {
+                std::filesystem::create_directories(desiredPath, err);
+            }
+        }
+
         auto file = std::ofstream(filename, std::ofstream::binary);
         if (file) {
             file.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
