@@ -9,6 +9,7 @@ newoption {
     allowed = {
         { "gl",   "OpenGL" },
         { "dx",   "DirectX 11" },
+        { "vk",   "Vulkan" },
     }
 }
 
@@ -131,6 +132,7 @@ solution "grabbed"
         dofile "pinata.lua"
         dofile "perfectdark.lua"
         dofile "onevs.lua"
+        dofile "xzp.lua"
     
     if _OPTIONS["with-tools"] then
         group "tools"
