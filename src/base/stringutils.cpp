@@ -1,5 +1,7 @@
 #include "stringutils.h"
 
+#include "base/byte_order.h"
+
 #include <algorithm>
 
 namespace grabbed::base::stringutils
@@ -42,11 +44,31 @@ namespace grabbed::base::stringutils
         return canDowncast(chr) ? static_cast<char>(chr & 0x7f) : '?';
     }
 
-    std::string stringFromWide(const std::wstring& source)
+    std::string stringFromWide(const std::wstring_view& source)
     {
         std::string result;
         result.resize(source.size());
         std::transform(source.begin(), source.end(), result.begin(), downcast);
+
+        return result;
+    }
+
+    std::string stringFromPtr(wchar_t* pString)
+    {
+        return stringFromWide(pString);
+    }
+
+    std::string stringFromPtrBe(wchar_t* pString)
+    {
+        std::wstring_view source(pString);
+
+        std::string result;
+        result.reserve(source.size());
+
+        for (wchar_t wc : source) {
+            auto swap{ base::byte_swap(wc) };
+            result.push_back(downcast(swap));
+        }
 
         return result;
     }

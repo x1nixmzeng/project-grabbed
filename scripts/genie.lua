@@ -132,6 +132,7 @@ solution "grabbed"
         dofile "pinata.lua"
         dofile "perfectdark.lua"
         dofile "onevs.lua"
+        dofile "jetpac.lua"
         dofile "xzp.lua"
     
     if _OPTIONS["with-tools"] then

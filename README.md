@@ -21,6 +21,7 @@ Over the years I have researched other games developed by Rare, covering their t
 | Viva Piñata                      | PC/Xbox360 | `CAFF07.08.06.0036` | localisation                         |
 | Banjo-Kazooie: Nuts & Bolts      | Xbox360    | `CAFF07.08.06.0036` | localisation                         |
 | 1 vs. 100                        | Xbox360    | `CAFF07.08.06.0036` | textures (bin), resources (xzp)      |
+| Jetpac Refuelled                 | Xbox360    | n/a                 | localisation                         |
 
 
 Note that although *1 vs. 100* was not developed by Rare, it uses a very similar CAFF format
